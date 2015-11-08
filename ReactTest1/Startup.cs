@@ -14,20 +14,20 @@ namespace ReactTest1
         // ReSharper disable once UnusedMember.Global
         public void Configuration(IAppBuilder app)
         {
-            // Configure serving of static files
+            // Configure the serving of static files.
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileSystem = new PhysicalFileSystem(@".\Client")
             });
 
-            // Configure SignalR
+            // Configure ASP.NET SignalR.
             app.MapHubs(new HubConfiguration
             {
-                EnableCrossDomain = true,
-                EnableDetailedErrors = true
+                EnableDetailedErrors = true,
+                EnableJavaScriptProxies = true
             });
 
-            // Configure ASP.NET Web API 2
+            // Configure ASP.NET Web API 2.
             app.UseWebApi(new HttpConfiguration
             // ReSharper disable once RedundantEmptyObjectOrCollectionInitializer
             {
