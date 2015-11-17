@@ -107,12 +107,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Client\client.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Client\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="client\content\index.html" />
+    <Content Include="client\scripts\app.js" />
     <Content Include="gulpfile.js" />
   </ItemGroup>
   <ItemGroup />

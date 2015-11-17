@@ -14,7 +14,7 @@ namespace ReactTest1
         {
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileSystem = new PhysicalFileSystem(@".\Client")
+                FileSystem = new PhysicalFileSystem(@".\dist")
             });
 
             app.MapSignalR();
