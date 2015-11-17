@@ -101,6 +101,7 @@
     <Compile Include="Hubs\TestHub.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".jshintrc" />
     <None Include="App.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>

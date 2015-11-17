@@ -18,8 +18,6 @@ namespace ReactTest1
             });
 
             app.MapSignalR();
-
-            // app.UseWebApi(new HttpConfiguration());
         }
     }
 }

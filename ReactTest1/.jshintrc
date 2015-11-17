@@ -1,0 +1,18 @@
+{
+  "undef": true,
+  "unused": true,
+  "bitwise": true,
+  "curly": true,
+  "eqnull": true,
+  "eqeqeq": true,
+  "quotmark": "double",
+  "trailing": true,
+  "maxdepth": 2,
+  "strict": true,
+  "globals": {
+    "require":  true,
+    "$": true,
+    "console": true,
+    "window": true
+  }
+}

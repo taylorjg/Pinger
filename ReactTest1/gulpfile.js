@@ -1,42 +1,49 @@
 /// <binding AfterBuild='build' Clean='clean' />
 
-var gulp = require("gulp");
-var jshint = require('gulp-jshint');
-var concat = require('gulp-concat');
-var sequence = require("run-sequence");
-var del = require("del");
+// ReSharper disable UndeclaredGlobalVariableUsing
 
-var srcDir = "./client";
-var distDir = "./bin/debug/dist";
-var scriptFiles = srcDir + "/scripts/**/*.js";
-var contentFiles = srcDir + "/content/**/*.html";
+(function () {
 
-gulp.task("lint", function () {
-    return gulp.src(scriptFiles)
-        .pipe(jshint()) // TODO: Pass options to jshint.
-        .pipe(jshint.reporter("default"));
-});
+    "use strict";
 
-gulp.task("copyContentFiles", function () {
-    return gulp.src(contentFiles).pipe(gulp.dest(distDir));
-});
+    var gulp = require("gulp");
+    var jshint = require("gulp-jshint");
+    var sequence = require("run-sequence");
+    var del = require("del");
 
-gulp.task("copyScriptFiles", function () {
-    return gulp.src(scriptFiles).pipe(gulp.dest(distDir));
-});
+    var srcDir = "./client";
+    var distDir = "./bin/debug/dist";
+    var scriptFiles = srcDir + "/scripts/**/*.js";
+    var contentFiles = srcDir + "/content/**/*.html";
 
-gulp.task("copyFiles", ["copyContentFiles", "copyScriptFiles"]);
+    gulp.task("lint", function () {
+        return gulp.src(["gulpfile.js", scriptFiles])
+            .pipe(jshint())
+            .pipe(jshint.reporter("default"));
+    });
 
-gulp.task("clean", function () {
-    return del(distDir + "/*");
-});
+    gulp.task("copyContentFiles", function () {
+        return gulp.src(contentFiles).pipe(gulp.dest(distDir));
+    });
 
-gulp.task("build", function (done) {
-    sequence(
-        "clean",
-        "lint",
-        "copyFiles",
-        done);
-});
+    gulp.task("copyScriptFiles", function () {
+        return gulp.src(scriptFiles).pipe(gulp.dest(distDir));
+    });
 
-gulp.task("default", ["build"]);
+    gulp.task("copyFiles", ["copyContentFiles", "copyScriptFiles"]);
+
+    gulp.task("clean", function () {
+        return del(distDir + "/*");
+    });
+
+    gulp.task("build", function (done) {
+        sequence(
+            "clean",
+            "lint",
+            "copyFiles",
+            done);
+    });
+
+    gulp.task("default", ["build"]);
+
+}());

@@ -1,21 +1,19 @@
-﻿(function () {
+﻿(function() {
 
     "use strict";
 
-    var testHub = $.connection.testHub;
-    console.log(testHub);
+    var hubConnection = $.hubConnection();
+    var hubProxy = hubConnection.createHubProxy("testHub");
 
-    testHub.client.ping = function (n) {
+    hubProxy.on("ping", function(n) {
         console.log("ping", n);
-    };
+    });
 
-    $.connection.hub.start()
+    hubConnection.start()
         .done(function() {
-            console.log("$.connection.hub.start().done()");
-            console.log(arguments);
+            console.log("hubConnection done");
         })
-        .fail(function() {
-            console.log("$.connection.hub.start().fail()");
-            console.log(arguments);
+        .fail(function(reason) {
+            console.log("hubConnection fail - reason:", reason);
         });
 }());
