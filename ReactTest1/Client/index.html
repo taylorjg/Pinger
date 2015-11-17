@@ -1,15 +1,23 @@
 ﻿<html lang="en">
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <title>ReactTest1</title>
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.4.js"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.0.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/bootstrap/3.3.5/bootstrap.js"></script>
     <!-- ReSharper disable Html.PathError -->
     <script src="/signalr/hubs"></script>
     <!-- ReSharper restore Html.PathError -->
     <script src="client.js"></script>
+    <link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/bootstrap/3.3.5/css/bootstrap.css">
 </head>
 <body>
-<p>Hello!</p>
+    <div class="container">
+        <p class="row">Hello!</p>
+        <div class="row">
+            <button type="button" id="btnConnect" class="btn btn-sm btn-primary">Connect</button>
+            <button type="button" id="btnDisconnect" class="btn btn-sm btn-primary">Disconnect</button>
+        </div>
+    </div>
 </body>
 </html>
