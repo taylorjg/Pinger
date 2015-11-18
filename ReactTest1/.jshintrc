@@ -12,7 +12,9 @@
   "globals": {
     "require":  true,
     "$": true,
+    "_": true,
     "console": true,
-    "window": true
+    "window": true,
+    "document": true
   }
 }
