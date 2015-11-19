@@ -110,6 +110,7 @@
   <ItemGroup>
     <Content Include="client\content\index.html" />
     <Content Include="client\scripts\app.js" />
+    <Content Include="client\styles\app.css" />
     <Content Include="gulpfile.js" />
   </ItemGroup>
   <ItemGroup />

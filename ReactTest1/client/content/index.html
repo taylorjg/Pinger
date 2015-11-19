@@ -6,10 +6,9 @@
     <script src="http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.0.js"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/bootstrap/3.3.5/bootstrap.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.js"></script>
-    <!-- ReSharper disable Html.PathError -->
     <script src="app.js"></script>
-    <!-- ReSharper restore Html.PathError -->
     <link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/bootstrap/3.3.5/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="app.css">
 </head>
 <body>
     <br />
@@ -20,9 +19,9 @@
             <button type="button" id="btnClear" class="btn btn-sm btn-danger">Clear</button>
         </div>
         <br />
-        <div id="alertArea" class="row alert alert-success"></div>
+        <div id="alertArea" class="row alert alert-success scrollableMessageArea"></div>
         <br />
-        <pre id="outputArea" class="row"></pre>
+        <pre id="outputArea" class="row scrollableMessageArea"></pre>
         <br />
     </div>
 </body>

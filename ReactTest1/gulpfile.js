@@ -13,8 +13,9 @@
 
     var srcDir = "./client";
     var distDir = "./bin/debug/dist";
-    var scriptFiles = srcDir + "/scripts/**/*.js";
     var contentFiles = srcDir + "/content/**/*.html";
+    var scriptFiles = srcDir + "/scripts/**/*.js";
+    var styleFiles = srcDir + "/styles/**/*.css";
 
     gulp.task("lint", function () {
         return gulp.src(["gulpfile.js", scriptFiles])
@@ -22,15 +23,10 @@
             .pipe(jshint.reporter("default"));
     });
 
-    gulp.task("copyContentFiles", function () {
-        return gulp.src(contentFiles).pipe(gulp.dest(distDir));
+    gulp.task("copyFiles", function () {
+        var allSrcs = [contentFiles, scriptFiles, styleFiles];
+        return gulp.src(allSrcs).pipe(gulp.dest(distDir));
     });
-
-    gulp.task("copyScriptFiles", function () {
-        return gulp.src(scriptFiles).pipe(gulp.dest(distDir));
-    });
-
-    gulp.task("copyFiles", ["copyContentFiles", "copyScriptFiles"]);
 
     gulp.task("clean", function () {
         return del(distDir + "/*");

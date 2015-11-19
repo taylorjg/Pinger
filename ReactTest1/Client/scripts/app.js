@@ -6,6 +6,7 @@
         var existingContent = $element.html();
         var separator = existingContent.length > 0 ? newline : "";
         $element.html(existingContent + separator + message);
+        $element.scrollTop(1E10);
     };
 
     $(document).ready(function () {
@@ -26,25 +27,35 @@
             addAlertMessage("ping " + n);
         });
 
+        var setConnectionStatus = function (isConnected) {
+            $btnConnect.prop("disabled", isConnected);
+            $btnDisconnect.prop("disabled", !isConnected);
+        };
+
         $btnConnect.click(function () {
             addOutputMessage("Calling hubConnection.start()");
             hubConnection.start()
                 .done(function () {
                     addOutputMessage("hubConnection.start() succeeded");
+                    setConnectionStatus(true);
                 })
                 .fail(function (reason) {
                     addOutputMessage("hubConnection.start() failed - reason: " + reason);
+                    setConnectionStatus(false);
                 });
         });
 
         $btnDisconnect.click(function() {
             addOutputMessage("Calling hubConnection.stop()");
             hubConnection.stop();
+            setConnectionStatus(false);
         });
 
         $btnClear.click(function() {
             $alertArea.html("");
             $outputArea.html("");
         });
+
+        setConnectionStatus(false);
     });
 }(window._));
