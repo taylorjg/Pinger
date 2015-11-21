@@ -16,10 +16,7 @@ namespace ReactTest1
             {
                 var n = 1;
                 var testHubContext = GlobalHost.ConnectionManager.GetHubContext<TestHub>();
-                var timer = new Timer(_ =>
-                {
-                    testHubContext.Clients.All.ping(n++);
-                }, null, 0, 1000);
+                var timer = new Timer(_ => testHubContext.Clients.All.ping(n++), null, 0, 1000);
 
                 Console.WriteLine($"Listening on {url}");
 
