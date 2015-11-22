@@ -11,20 +11,30 @@ namespace ReactTest1
         private static void Main()
         {
             const string url = "http://localhost:3344";
+            var period = TimeSpan.FromSeconds(1);
 
-            using (WebApp.Start<Startup>(url))
+            using (WebApp(url))
+            using (Timer(period))
             {
-                var n = 1;
-                var testHubContext = GlobalHost.ConnectionManager.GetHubContext<TestHub>();
-                var timer = new Timer(_ => testHubContext.Clients.All.ping(n++), null, 0, 1000);
-
                 Console.WriteLine($"Listening on {url}");
-
                 Console.WriteLine("Press a key to quit...");
                 Console.ReadKey();
-
-                timer.Dispose();
             }
+        }
+
+        private static IDisposable WebApp(string url)
+        {
+            return Microsoft.Owin.Hosting.WebApp.Start<Startup>(url);
+        }
+
+        private static IDisposable Timer(TimeSpan period)
+        {
+            var testHubContext = GlobalHost.ConnectionManager.GetHubContext<TestHub>();
+            var n = 1;
+            TimerCallback callback = _ => testHubContext.Clients.All.ping(n++);
+            const object state = null;
+            var dueTime = TimeSpan.FromSeconds(0);
+            return new Timer(callback, state, dueTime, period);
         }
     }
 }
