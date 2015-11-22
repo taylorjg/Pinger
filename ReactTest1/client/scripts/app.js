@@ -9,24 +9,27 @@
         $element.scrollTop(1E10);
     };
 
-    var connectionStateToString = function(state) {
-        switch (state) {
-            case $.signalR.connectionState.connecting: return "connecting";
-            case $.signalR.connectionState.connected: return "connected";
-            case $.signalR.connectionState.reconnecting: return "reconnecting";
-            case $.signalR.connectionState.disconnected: return "disconnected";
-            default: return "?";
-        }
+    var connectionStateToString = function (state) {
+        var convert = function() {
+            switch (state) {
+                case $.signalR.connectionState.connecting: return "connecting";
+                case $.signalR.connectionState.connected: return "connected";
+                case $.signalR.connectionState.reconnecting: return "reconnecting";
+                case $.signalR.connectionState.disconnected: return "disconnected";
+                default: return "?";
+            }
+        };
+        return _.capitalize(convert());
     };
 
     $(document).ready(function () {
 
+        var $connectionState = $("#connectionState");
         var $btnConnect = $("#btnConnect");
         var $btnDisconnect = $("#btnDisconnect");
         var $btnClear = $("#btnClear");
         var $alertArea = $("#alertArea");
         var $outputArea = $("#outputArea");
-        var $connectionState = $("#connectionState");
 
         var addAlertMessage = _.partial(addMessage, $alertArea, "<br />");
         var addOutputMessage = _.partial(addMessage, $outputArea, "\n");
