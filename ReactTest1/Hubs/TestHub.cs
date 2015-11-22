@@ -9,19 +9,26 @@ namespace ReactTest1.Hubs
 {
     public class TestHub : Hub
     {
-        public static IDisposable PingEverySecond()
+        public static IDisposable PingAllEverySecond()
         {
-            var testHubContext = GlobalHost.ConnectionManager.GetHubContext<TestHub>();
+            var period = TimeSpan.FromSeconds(1);
             var n = 1;
-            return InvokeActionEverySecond(() => testHubContext.Clients.All.ping(n++));
+
+            return InvokeClientMethodPeriodically(
+                period,
+                hubContext => hubContext.Clients.All,
+                clients => clients.ping(n++));
         }
 
-        private static IDisposable InvokeActionEverySecond(Action action)
+        private static IDisposable InvokeClientMethodPeriodically(
+            TimeSpan period,
+            Func<IHubContext, dynamic> clientsSelector,
+            Action<dynamic> action)
         {
-            TimerCallback callback = _ => action();
+            var hubContext = GlobalHost.ConnectionManager.GetHubContext<TestHub>();
+            TimerCallback callback = _ => action(clientsSelector(hubContext));
             const object state = null;
             var dueTime = TimeSpan.FromSeconds(0);
-            var period = TimeSpan.FromSeconds(1);
             return new Timer(callback, state, dueTime, period);
         }
     }

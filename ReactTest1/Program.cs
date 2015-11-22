@@ -10,7 +10,7 @@ namespace ReactTest1
             const string url = "http://localhost:3344";
 
             using (Startup.WebApp(url))
-            using (TestHub.PingEverySecond())
+            using (TestHub.PingAllEverySecond())
             {
                 Console.WriteLine($"Listening on {url}");
                 Console.WriteLine("Press a key to quit...");
