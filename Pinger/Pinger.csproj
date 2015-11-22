@@ -7,8 +7,8 @@
     <ProjectGuid>{97A9E474-91CA-4240-AAC2-33D3166E401E}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ReactTest1</RootNamespace>
-    <AssemblyName>ReactTest1</AssemblyName>
+    <RootNamespace>Pinger</RootNamespace>
+    <AssemblyName>Pinger</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
