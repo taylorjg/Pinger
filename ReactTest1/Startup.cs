@@ -1,4 +1,5 @@
-﻿using Microsoft.Owin;
+﻿using System;
+using Microsoft.Owin;
 using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Owin;
@@ -18,6 +19,11 @@ namespace ReactTest1
             });
 
             app.MapSignalR();
+        }
+
+        public static IDisposable WebApp(string url)
+        {
+            return Microsoft.Owin.Hosting.WebApp.Start<Startup>(url);
         }
     }
 }
