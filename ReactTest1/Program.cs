@@ -8,10 +8,9 @@ namespace ReactTest1
         private static void Main()
         {
             const string url = "http://localhost:3344";
-            var period = TimeSpan.FromSeconds(1);
 
             using (Startup.WebApp(url))
-            using (TestHub.Timer(period))
+            using (TestHub.PingEverySecond())
             {
                 Console.WriteLine($"Listening on {url}");
                 Console.WriteLine("Press a key to quit...");
