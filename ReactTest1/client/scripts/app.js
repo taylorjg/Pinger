@@ -35,10 +35,19 @@
         var addOutputMessage = _.partial(addMessage, $outputArea, "\n");
 
         var setConnectionState = function (connectionState) {
-            $connectionState.text(connectionStateToString(connectionState));
+
+            var isConnecting = (connectionState === $.signalR.connectionState.connecting);
             var isConnected = (connectionState === $.signalR.connectionState.connected);
-            $btnConnect.prop("disabled", isConnected);
-            $btnDisconnect.prop("disabled", !isConnected);
+            var isReconnecting = (connectionState === $.signalR.connectionState.reconnecting);
+            var isDisconnected = (connectionState === $.signalR.connectionState.disconnected);
+
+            $btnConnect.prop("disabled", isConnected || isConnecting || isReconnecting);
+            $btnDisconnect.prop("disabled", isDisconnected);
+
+            $connectionState.text(connectionStateToString(connectionState));
+            $connectionState.toggleClass("connectionGood", isConnected);
+            $connectionState.toggleClass("connectionBad", isDisconnected);
+            $connectionState.toggleClass("connectionWobbly", isConnecting || isReconnecting);
         };
 
         var hubConnection = $.hubConnection();
@@ -100,6 +109,7 @@
             $outputArea.html("");
         });
 
-        setConnectionState();
+        // TODO: I would prefer to access the current state of hubConnection (or hubProxy?) instead.
+        setConnectionState($.signalR.connectionState.disconnected);
     });
 }(window._));

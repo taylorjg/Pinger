@@ -4,13 +4,13 @@
 }
 
 .connectionGood {
-    color: green;
+    background-color: green;
 }
 
 .connectionBad {
-    color: red;
+    background-color: red;
 }
 
 .connectionWobbly {
-    color: orange;
+    background-color: orange;
 }
