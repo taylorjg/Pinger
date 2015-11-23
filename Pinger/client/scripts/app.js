@@ -10,16 +10,26 @@
     };
 
     var connectionStateToString = function (state) {
-        var convert = function() {
-            switch (state) {
-                case $.signalR.connectionState.connecting: return "connecting";
-                case $.signalR.connectionState.connected: return "connected";
-                case $.signalR.connectionState.reconnecting: return "reconnecting";
-                case $.signalR.connectionState.disconnected: return "disconnected";
-                default: return "?";
-            }
+        switch (state) {
+            case $.signalR.connectionState.connecting: return "Connecting";
+            case $.signalR.connectionState.connected: return "Connected";
+            case $.signalR.connectionState.reconnecting: return "Reconnecting";
+            case $.signalR.connectionState.disconnected: return "Disconnected";
+            default: return "?";
+        }
+    };
+
+    var getConnectionStateFlags = function(connectionState) {
+        var csValues = $.signalR.connectionState;
+        return {
+            isConnecting: connectionState === csValues.connecting,
+            isConnected: connectionState === csValues.connected,
+            isReconnecting: connectionState === csValues.reconnecting,
+            isDisconnected: connectionState === csValues.disconnected,
+            isUnknown: _(_.keys(csValues)).all(function(key) {
+                return connectionState !== csValues[key];
+            })
         };
-        return _.capitalize(convert());
     };
 
     $(document).ready(function () {
@@ -36,26 +46,21 @@
 
         var setConnectionState = function (connectionState) {
 
-            var isConnecting = (connectionState === $.signalR.connectionState.connecting);
-            var isConnected = (connectionState === $.signalR.connectionState.connected);
-            var isReconnecting = (connectionState === $.signalR.connectionState.reconnecting);
-            var isDisconnected = (connectionState === $.signalR.connectionState.disconnected);
+            var flags = getConnectionStateFlags(connectionState);
 
-            $btnConnect.prop("disabled", isConnected || isConnecting || isReconnecting);
-            $btnDisconnect.prop("disabled", isDisconnected);
+            var enableConnectionButton = flags.isDisconnected || flags.isUnknown;
+            var disableConnectionButton = !enableConnectionButton;
+            var disableDisconnectionButton = enableConnectionButton;
+            $btnConnect.prop("disabled", disableConnectionButton);
+            $btnDisconnect.prop("disabled", disableDisconnectionButton);
 
             $connectionState.text(connectionStateToString(connectionState));
-            $connectionState.toggleClass("connectionGood", isConnected);
-            $connectionState.toggleClass("connectionBad", isDisconnected);
-            $connectionState.toggleClass("connectionWobbly", isConnecting || isReconnecting);
+            $connectionState.toggleClass("connectionGood", flags.isConnected);
+            $connectionState.toggleClass("connectionBad", flags.isDisconnected);
+            $connectionState.toggleClass("connectionWobbly", flags.isConnecting || flags.isReconnecting);
         };
 
         var hubConnection = $.hubConnection();
-        var hubProxy = hubConnection.createHubProxy("testHub");
-
-        hubProxy.on("ping", function (n) {
-            addAlertMessage("ping " + n);
-        });
 
         hubConnection.connectionSlow(function () {
             addOutputMessage("[connectionSlow]");
@@ -109,7 +114,12 @@
             $outputArea.html("");
         });
 
-        // TODO: I would prefer to access the current state of hubConnection (or hubProxy?) instead.
-        setConnectionState($.signalR.connectionState.disconnected);
+        var hubProxy = hubConnection.createHubProxy("testHub");
+
+        hubProxy.on("ping", function (n) {
+            addAlertMessage("ping " + n);
+        });
+
+        setConnectionState();
     });
 }(window._));
