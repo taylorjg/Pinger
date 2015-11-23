@@ -10,11 +10,12 @@
     };
 
     var connectionStateToString = function (state) {
+        var csValues = $.signalR.connectionState;
         switch (state) {
-            case $.signalR.connectionState.connecting: return "Connecting";
-            case $.signalR.connectionState.connected: return "Connected";
-            case $.signalR.connectionState.reconnecting: return "Reconnecting";
-            case $.signalR.connectionState.disconnected: return "Disconnected";
+            case csValues.connecting: return "Connecting";
+            case csValues.connected: return "Connected";
+            case csValues.reconnecting: return "Reconnecting";
+            case csValues.disconnected: return "Disconnected";
             default: return "?";
         }
     };
@@ -35,6 +36,8 @@
     $(document).ready(function () {
 
         var $connectionState = $("#connectionState");
+        var $transportDetails = $("#transportDetails");
+        var $transportName = $("#transportName");
         var $btnConnect = $("#btnConnect");
         var $btnDisconnect = $("#btnDisconnect");
         var $btnClear = $("#btnClear");
@@ -44,7 +47,7 @@
         var addAlertMessage = _.partial(addMessage, $alertArea, "<br />");
         var addOutputMessage = _.partial(addMessage, $outputArea, "\n");
 
-        var setConnectionState = function (connectionState) {
+        var setConnectionState = function (connection, connectionState) {
 
             var flags = getConnectionStateFlags(connectionState);
 
@@ -58,6 +61,11 @@
             $connectionState.toggleClass("connectionGood", flags.isConnected);
             $connectionState.toggleClass("connectionBad", flags.isDisconnected);
             $connectionState.toggleClass("connectionWobbly", flags.isConnecting || flags.isReconnecting);
+
+            $transportDetails.toggle(flags.isConnected);
+            if (flags.isConnected) {
+                $transportName.text(connection.transport.name);
+            }
         };
 
         var hubConnection = $.hubConnection();
@@ -83,7 +91,7 @@
         });
 
         hubConnection.stateChanged(function (states) {
-            setConnectionState(states.newState);
+            setConnectionState(hubConnection, states.newState);
             var oldState = connectionStateToString(states.oldState);
             var newState = connectionStateToString(states.newState);
             addOutputMessage("[stateChanged] oldState: " + oldState + "; newState: " + newState);
@@ -120,6 +128,6 @@
             addAlertMessage("ping " + n);
         });
 
-        setConnectionState();
+        setConnectionState(hubConnection);
     });
 }(window._));
