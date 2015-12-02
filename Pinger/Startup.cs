@@ -3,10 +3,11 @@ using Microsoft.Owin;
 using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
 using Owin;
+using Pinger;
 
-[assembly: OwinStartup(typeof(ReactTest1.Startup))]
+[assembly: OwinStartup(typeof(Startup))]
 
-namespace ReactTest1
+namespace Pinger
 {
     internal class Startup
     {

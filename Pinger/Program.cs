@@ -1,7 +1,7 @@
 ﻿using System;
-using ReactTest1.Hubs;
+using Pinger.Hubs;
 
-namespace ReactTest1
+namespace Pinger
 {
     internal static class Program
     {

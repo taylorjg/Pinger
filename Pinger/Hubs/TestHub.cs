@@ -5,7 +5,7 @@ using Microsoft.AspNet.SignalR;
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable UnusedMember.Global
 
-namespace ReactTest1.Hubs
+namespace Pinger.Hubs
 {
     public class TestHub : Hub
     {
