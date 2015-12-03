@@ -1,4 +1,4 @@
-﻿(function() {
+﻿(function(_) {
 
     "use strict";
 
@@ -21,9 +21,9 @@
         var $outputArea = $("#outputArea");
 
         var addAlertMessage = _.partial(addMessage, $alertArea, "<br />");
-        var addOutputMessage = _.partial(addMessage, $outputArea, "\n");
+        // var addOutputMessage = _.partial(addMessage, $outputArea, "\n");
 
-        var handleStateChanged = function (_, __, newStateName, newFlags, transportName) {
+        var handleStateChanged = function (oldStateName, oldFlags, newStateName, newFlags, transportName) {
 
             var enableConnectionButton = newFlags.isDisconnected || newFlags.isUnknown;
             var disableConnectionButton = !enableConnectionButton;
@@ -45,12 +45,10 @@
         backend.onStateChanged(handleStateChanged);
 
         $btnConnect.click(function () {
-            addOutputMessage("Calling hubConnection.start()");
             backend.start();
         });
 
         $btnDisconnect.click(function() {
-            addOutputMessage("Calling hubConnection.stop()");
             backend.stop();
         });
 
@@ -62,9 +60,5 @@
         backend.onMethod("testHub", "ping", function (n) {
             addAlertMessage("ping " + n);
         });
-
-        // TODO: we need to kick the initial connection state
-        // setConnectionState(hubConnection);
-
     });
-}());
+}(window._));

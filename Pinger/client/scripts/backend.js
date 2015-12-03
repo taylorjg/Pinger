@@ -1,4 +1,4 @@
-﻿(function() {
+﻿(function(_) {
 
     "use strict";
 
@@ -73,6 +73,7 @@
         };
 
         var start = function () {
+            // addOutputMessage("Calling hubConnection.start()");
             hubConnection.start()
                 .done(function hubConnectionDone() {
                     // addOutputMessage("hubConnection.start() succeeded");
@@ -83,6 +84,7 @@
         };
 
         var stop = function() {
+            // addOutputMessage("Calling hubConnection.stop()");
             hubConnection.stop();
         };
 
@@ -96,6 +98,8 @@
                 var transportName = newFlags.isConnected ? hubConnection.transport.name : "";
                 cb(oldStateName, oldFlags, newStateName, newFlags, transportName);
             });
+
+            cb("", getConnectionStateFlags(), "", getConnectionStateFlags(), "");
         };
 
         var onMethod = function (hubName, methodName, cb, context) {
@@ -113,4 +117,4 @@
             onMethod: onMethod
         };
     };
-}());
+}(window._));
