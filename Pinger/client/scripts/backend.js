@@ -4,7 +4,9 @@
 
     window.pinger = window.pinger || {};
 
-    window.pinger.backend = function () {
+    window.pinger.backend = function (logOutputMessage) {
+
+        logOutputMessage = logOutputMessage || _.noop;
 
         var hubConnection = $.hubConnection();
         var hubProxies = {};
@@ -34,34 +36,33 @@
         };
 
         hubConnection.starting(function () {
-            // addOutputMessage("[starting]");
+            logOutputMessage("[starting]");
         });
 
         hubConnection.connectionSlow(function () {
-            // addOutputMessage("[connectionSlow]");
+            logOutputMessage("[connectionSlow]");
         });
 
         hubConnection.disconnected(function () {
-            // addOutputMessage("[disconnected]");
+            logOutputMessage("[disconnected]");
         });
 
         hubConnection.reconnecting(function () {
-            // addOutputMessage("[reconnecting]");
+            logOutputMessage("[reconnecting]");
         });
 
         hubConnection.reconnected(function () {
-            // addOutputMessage("[reconnected]");
+            logOutputMessage("[reconnected]");
         });
 
-        hubConnection.stateChanged(function (/* states */) {
-            // setConnectionState(hubConnection, states.newState);
-            // var oldState = connectionStateToString(states.oldState);
-            // var newState = connectionStateToString(states.newState);
-            // addOutputMessage("[stateChanged] oldState: " + oldState + "; newState: " + newState);
+        hubConnection.stateChanged(function (states) {
+            var oldStateName = connectionStateToString(states.oldState);
+            var newStateName = connectionStateToString(states.newState);
+            logOutputMessage("[stateChanged] oldState: " + oldStateName + "; newState: " + newStateName);
         });
 
-        hubConnection.error(function (/* errorData */) {
-            // addOutputMessage("[error] errorData: " + errorData);
+        hubConnection.error(function (errorData) {
+            logOutputMessage("[error] errorData: " + errorData);
         });
 
         var getHubProxy = function (hubName) {
@@ -73,23 +74,21 @@
         };
 
         var start = function () {
-            // addOutputMessage("Calling hubConnection.start()");
             hubConnection.start()
                 .done(function hubConnectionDone() {
-                    // addOutputMessage("hubConnection.start() succeeded");
+                    logOutputMessage("[start.done]");
                 })
-                .fail(function hubConnectionFail() {
-                    // addOutputMessage("hubConnection.start() failed - reason: " + reason);
+                .fail(function hubConnectionFail(reason) {
+                    logOutputMessage("[start.fail] reason: " + reason);
                 });
         };
 
         var stop = function() {
-            // addOutputMessage("Calling hubConnection.stop()");
             hubConnection.stop();
         };
 
         var onStateChanged = function (cb) {
-            cb = cb || function() {};
+            cb = cb || _.noop;
             hubConnection.stateChanged(function(states) {
                 var oldFlags = getConnectionStateFlags(states.oldState);
                 var newFlags = getConnectionStateFlags(states.newState);
