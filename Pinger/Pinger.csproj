@@ -111,6 +111,8 @@
     <Content Include="client\content\index.html" />
     <Content Include="client\scripts\app.js" />
     <Content Include="client\scripts\backend.js" />
+    <Content Include="client\scripts\alertMessageArea.js" />
+    <Content Include="client\scripts\outputMessageArea.js" />
     <Content Include="client\styles\app.css" />
     <Content Include="gulpfile.js" />
   </ItemGroup>

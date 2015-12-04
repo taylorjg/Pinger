@@ -1,4 +1,4 @@
-﻿(function(_) {
+﻿(function() {
 
     "use strict";
 
@@ -10,18 +10,10 @@
         var $btnConnect = $("#btnConnect");
         var $btnDisconnect = $("#btnDisconnect");
         var $btnClear = $("#btnClear");
-        var $alertArea = $("#alertArea");
-        var $outputArea = $("#outputArea");
 
-        var logMessage = function ($element, newline, message) {
-            var existingContent = $element.html();
-            var separator = existingContent.length > 0 ? newline : "";
-            $element.html(existingContent + separator + message);
-            $element.scrollTop(1E10);
-        };
-
-        var logAlertMessage = _.partial(logMessage, $alertArea, "<br />");
-        var logOutputMessage = _.partial(logMessage, $outputArea, "\n");
+        var alertMessageArea = window.pinger.alertMessageArea();
+        var outputMessageArea = window.pinger.outputMessageArea();
+        var backend = window.pinger.backend(outputMessageArea.log);
 
         var handleStateChanged = function (oldStateName, oldFlags, newStateName, newFlags, transportName) {
 
@@ -41,9 +33,6 @@
             $transportName.text(transportName);
         };
 
-        var backend = window.pinger.backend(logOutputMessage);
-        backend.onStateChanged(handleStateChanged);
-
         $btnConnect.click(function () {
             backend.start();
         });
@@ -53,12 +42,14 @@
         });
 
         $btnClear.click(function() {
-            $alertArea.html("");
-            $outputArea.html("");
+            alertMessageArea.clear();
+            outputMessageArea.clear();
         });
 
         backend.onMethod("testHub", "ping", function (n) {
-            logAlertMessage("ping " + n);
+            alertMessageArea.log("ping " + n);
         });
+
+        backend.onStateChanged(handleStateChanged);
     });
-}(window._));
+}());
