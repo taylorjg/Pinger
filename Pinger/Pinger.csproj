@@ -108,15 +108,20 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="client\content\index.html" />
-    <Content Include="client\scripts\app.js" />
-    <Content Include="client\scripts\backend.js" />
-    <Content Include="client\scripts\alertMessageArea.js" />
-    <Content Include="client\scripts\outputMessageArea.js" />
-    <Content Include="client\styles\app.css" />
+    <Content Include="clients\nofw\content\index.html" />
+    <Content Include="clients\nofw\scripts\app.js" />
+    <Content Include="clients\nofw\scripts\backend.js" />
+    <Content Include="clients\nofw\scripts\alertMessageArea.js" />
+    <Content Include="clients\nofw\scripts\outputMessageArea.js" />
+    <Content Include="clients\nofw\styles\app.css" />
     <Content Include="gulpfile.js" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="clients\ng1\" />
+    <Folder Include="clients\ng2js\" />
+    <Folder Include="clients\ng2ts\" />
+    <Folder Include="clients\react\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

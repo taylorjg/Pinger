@@ -11,8 +11,8 @@
     var sequence = require("run-sequence");
     var del = require("del");
 
-    var srcDir = "./client";
-    var distDir = "./bin/debug/dist";
+    var srcDir = "./clients/nofw";
+    var distDir = "./bin/debug/dist/nofw";
     var contentFiles = srcDir + "/content/**/*.html";
     var scriptFiles = srcDir + "/scripts/**/*.js";
     var styleFiles = srcDir + "/styles/**/*.css";
