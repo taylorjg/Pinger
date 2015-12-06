@@ -14,6 +14,6 @@
 * Add Jasmine unit tests for the existing "no UI framework" client
 * Add a client using AngularJS 1.x
     * Have a go at using [angular-hint](https://github.com/angular/angular-hint)
-* Add a client using AngularJS 2 (JavaScript)
-* Add a client using AngularJS 2 (TypeScript)
+* Add a client using AngularJS 2 (with code in JavaScript)
+* Add a client using AngularJS 2 (with code in TypeScript)
 * Add a client using React
