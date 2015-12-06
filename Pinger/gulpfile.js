@@ -6,13 +6,15 @@
 
     "use strict";
 
-    var configurationName = "debug";
+    var configurationName;
     try {
         var prebuild = require("./prebuild.json");
-        configurationName = prebuild.configurationName.toLowerCase();
+        configurationName = prebuild.configurationName;
     } catch (err) {
-        console.log("Missing prebuild.json - please run from within Visual Studio");
+        console.log("Missing prebuild.json - using default values");
+        configurationName = "Debug";
     }
+    configurationName = configurationName.toLowerCase();
     console.log("configurationName: " + configurationName);
 
     var gulp = require("gulp");
@@ -38,7 +40,7 @@
     });
 
     gulp.task("clean", function () {
-        return del(distDir + "/*");
+        return del(distDir);
     });
 
     gulp.task("build", function (done) {
@@ -50,9 +52,5 @@
     });
 
     gulp.task("default", ["build"]);
-
-    if (!configurationName) {
-        return;
-    }
 
 }());
