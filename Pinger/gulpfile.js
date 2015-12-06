@@ -6,13 +6,22 @@
 
     "use strict";
 
+    var configurationName = "debug";
+    try {
+        var prebuild = require("./prebuild.json");
+        configurationName = prebuild.configurationName.toLowerCase();
+    } catch (err) {
+        console.log("Missing prebuild.json - please run from within Visual Studio");
+    }
+    console.log("configurationName: " + configurationName);
+
     var gulp = require("gulp");
     var jshint = require("gulp-jshint");
     var sequence = require("run-sequence");
     var del = require("del");
 
     var srcDir = "./clients/nofw";
-    var distDir = "./bin/debug/dist/nofw";
+    var distDir = "./bin/" + configurationName + "/dist/nofw";
     var contentFiles = srcDir + "/content/**/*.html";
     var scriptFiles = srcDir + "/scripts/**/*.js";
     var styleFiles = srcDir + "/styles/**/*.css";
@@ -41,5 +50,9 @@
     });
 
     gulp.task("default", ["build"]);
+
+    if (!configurationName) {
+        return;
+    }
 
 }());
