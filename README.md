@@ -11,8 +11,9 @@
 
 ## Future Plans
 
-Do further versions of the client:
-
-* Using AngularJS 1.x
-* Using AngularJS 2
-* Using React
+* Add Jasmine unit tests for the existing "no UI framework" client
+* Add a client using AngularJS 1.x
+    * Have a go at using [angular-hint](https://github.com/angular/angular-hint)
+* Add a client using AngularJS 2 (JavaScript)
+* Add a client using AngularJS 2 (TypeScript)
+* Add a client using React
