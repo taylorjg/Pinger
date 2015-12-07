@@ -22,33 +22,61 @@
     var sequence = require("run-sequence");
     var del = require("del");
 
-    var srcDir = "./clients/nofw";
-    var distDir = "./bin/" + configurationName + "/dist/nofw";
-    var contentFiles = srcDir + "/content/**/*.html";
-    var scriptFiles = srcDir + "/scripts/**/*.js";
-    var styleFiles = srcDir + "/styles/**/*.css";
-
-    gulp.task("lint", function () {
-        return gulp.src(["gulpfile.js", scriptFiles])
-            .pipe(jshint())
-            .pipe(jshint.reporter("default"));
-    });
-
-    gulp.task("copyFiles", function () {
-        var allSrcs = [contentFiles, scriptFiles, styleFiles];
-        return gulp.src(allSrcs).pipe(gulp.dest(distDir));
-    });
+    var srcDir = "./clients";
+    var distDir = "./bin/" + configurationName + "/dist";
 
     gulp.task("clean", function () {
         return del(distDir);
     });
 
+    function buildClient(clientName) {
+
+        var makeTaskName = function(taskName) {
+            return [clientName, taskName].join("_");
+        };
+
+        var clientSrcDir = srcDir + "/" + clientName;
+        var clientDistDir = distDir + "/" + clientName;
+
+        var clientContentFiles = clientSrcDir + "/content/**/*.html";
+        var clientScriptFiles = clientSrcDir + "/scripts/**/*.js";
+        var clientStyleFiles = clientSrcDir + "/styles/**/*.css";
+
+        var clientFiles = [clientContentFiles, clientScriptFiles, clientStyleFiles];
+
+        var lintTaskName = makeTaskName("lint");
+        var copyFilesTaskName = makeTaskName("copyFiles");
+
+        gulp.task(lintTaskName, function () {
+            return gulp.src(clientScriptFiles)
+                .pipe(jshint())
+                .pipe(jshint.reporter("default"));
+        });
+
+        gulp.task(copyFilesTaskName, function () {
+            return gulp.src(clientFiles)
+                .pipe(gulp.dest(clientDistDir));
+        });
+
+        // TODO: add a helper function to create taskname and then create a task with that taskname and add the taskname to an array.
+
+        return [lintTaskName, copyFilesTaskName];
+    };
+
     gulp.task("build", function (done) {
-        sequence(
-            "clean",
-            "lint",
-            "copyFiles",
-            done);
+
+        var args = [];
+        args.push("clean");
+
+        var clients = ["nofw", "ng1"];
+        clients.forEach(function(client) {
+            var clientTaskNames = buildClient(client);
+            args = args.concat(clientTaskNames);
+        });
+
+        args.push(done);
+
+        sequence.apply(null, args);
     });
 
     gulp.task("default", ["build"]);
