@@ -108,6 +108,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="clients\ng1\content\index.html" />
+    <Content Include="clients\ng1\scripts\alertMessageArea.js" />
+    <Content Include="clients\ng1\scripts\app.js" />
+    <Content Include="clients\ng1\scripts\backend.js" />
+    <Content Include="clients\ng1\scripts\outputMessageArea.js" />
+    <Content Include="clients\ng1\styles\app.css" />
     <Content Include="clients\nofw\content\index.html" />
     <Content Include="clients\nofw\scripts\app.js" />
     <Content Include="clients\nofw\scripts\backend.js" />
@@ -117,7 +123,6 @@
     <Content Include="gulpfile.js" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="clients\ng1\" />
     <Folder Include="clients\ng2js\" />
     <Folder Include="clients\ng2ts\" />
     <Folder Include="clients\react\" />
