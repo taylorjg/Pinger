@@ -67,21 +67,19 @@
                 .pipe(gulp.dest(clientDistDir));
         });
 
-        return taskNames;
+        gulp.task(clientName, function (done) {
+            var args = [];
+            args = args.concat(taskNames);
+            args.push(done);
+            sequence.apply(global, args);
+        });
+
+        return clientName;
     };
 
     gulp.task("build", function (done) {
-
-        var args = [];
-        args.push("clean");
-
-        clients.forEach(function(client) {
-            var clientTaskNames = buildClient(client);
-            args = args.concat(clientTaskNames);
-        });
-
-        args.push(done);
-
+        var buildClientTaskNames = clients.map(buildClient);
+        var args = ["clean", buildClientTaskNames, done];
         sequence.apply(global, args);
     });
 
