@@ -98,7 +98,10 @@
                 cb(oldStateName, oldFlags, newStateName, newFlags, transportName);
             });
 
-            cb("", getConnectionStateFlags(), "", getConnectionStateFlags(), "");
+            var initialFlags = getConnectionStateFlags(null);
+            var initialStateName = connectionStateToString(null);
+            var initialTransportName = "";
+            cb(initialStateName, initialFlags, initialStateName, initialFlags, initialTransportName);
         };
 
         var onMethod = function (hubName, methodName, cb, context) {

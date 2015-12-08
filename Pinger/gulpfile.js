@@ -47,9 +47,9 @@
         var clientSrcDir = srcDir + "/" + clientName;
         var clientDistDir = distDir + "/" + clientName;
 
-        var clientContentFiles = clientSrcDir + "/content/**/*.html";
-        var clientScriptFiles = clientSrcDir + "/scripts/**/*.js";
-        var clientStyleFiles = clientSrcDir + "/styles/**/*.css";
+        var clientContentFiles = clientSrcDir + "/html/**/*.html";
+        var clientScriptFiles = clientSrcDir + "/js/**/*.js";
+        var clientStyleFiles = clientSrcDir + "/css/**/*.css";
 
         var clientFiles = [
             clientContentFiles,
