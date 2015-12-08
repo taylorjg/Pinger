@@ -15,6 +15,7 @@
     "_": true,
     "console": true,
     "window": true,
-    "document": true
+    "document": true,
+    "angular":  true
   }
 }

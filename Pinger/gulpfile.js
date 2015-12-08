@@ -47,17 +47,20 @@
         var clientSrcDir = srcDir + "/" + clientName;
         var clientDistDir = distDir + "/" + clientName;
 
-        var clientContentFiles = clientSrcDir + "/html/**/*.html";
-        var clientScriptFiles = clientSrcDir + "/js/**/*.js";
-        var clientStyleFiles = clientSrcDir + "/css/**/*.css";
+        var clientHtmlFiles = clientSrcDir + "/html/**/*.html";
+        var clientJsFiles = clientSrcDir + "/js/**/*.js";
+        var clientCssFiles = clientSrcDir + "/css/**/*.css";
+        var clientLibFiles = clientSrcDir + "/lib/**/*.js";
 
         var clientFiles = [
-            clientContentFiles,
-            clientScriptFiles,
-            clientStyleFiles];
+            clientHtmlFiles,
+            clientJsFiles,
+            clientCssFiles,
+            clientLibFiles
+        ];
 
         createTask("lint", function() {
-            return gulp.src(clientScriptFiles)
+            return gulp.src(clientJsFiles)
                 .pipe(jshint())
                 .pipe(jshint.reporter("default"));
         });
