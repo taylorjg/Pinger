@@ -3,9 +3,8 @@
     "use strict";
 
     // https://github.com/angular/angular-hint/issues/81
-    if (angular.hint) {
-        //angular.hint.onAny(console.log.bind(console));
-        angular.hint.onAny(function () {
+    if (window.angular.hint) {
+        window.angular.hint.onAny(function () {
             if (arguments.length >= 2) {
                 var severity = arguments[1];
                 var fn;
@@ -15,19 +14,20 @@
                     case 3: /* SEVERITY_SUGGESTION */ fn = console.info; break;
                     default: fn = console.log; break;
                 }
+                var prefix = "[angular-hint]";
                 if (arguments.length === 2) {
-                    fn.call(console, arguments[0]);
+                    fn.call(console, prefix, arguments[0]);
                 }
                 else {
-                    fn.call(console, arguments[0], "(" + arguments[2] + ")");
+                    fn.call(console, prefix, arguments[0], "(" + arguments[2] + ")");
                 }
             }
         });
     }
 
-    var app = angular.module("pinger", []);
+    var app = window.angular.module("appPinger", []);
 
-    app.controller("Blah", [function () {
+    app.controller("MainController", [function () {
     }]);
 
     $(document).ready(function () {
