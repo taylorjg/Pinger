@@ -51,3 +51,33 @@ if (window.angular.hint) {
     });
 }
 ```
+
+## Regarding Integration of Gulp and Visual Studio
+
+I wanted to be able to determine the current build configuration name
+from within my `gulpfile.js` when executing it as part of a build in Visual Studio.
+There doesn't seem to be a good way to achieve this. I came up with the
+following which is a bit of a hack but better than nothing.
+
+I use a pre-build step to create a file called `prebuild.json` containing
+the current build configuration name:
+
+```bat
+echo { "configurationName": "$(ConfigurationName)" } > $(ProjectDir)prebuild.json
+```
+
+I then read `prebuild.json` from my `gulpfile.js` using `require`. I use a `try`/`catch`
+in case `prebuild.json` does not exist - in which case I use default values:
+
+```js
+var configurationName;
+try {
+    var prebuild = require("./prebuild.json");
+    configurationName = prebuild.configurationName;
+} catch (err) {
+    console.log("Missing prebuild.json - using default values");
+    configurationName = "Debug";
+}
+configurationName = configurationName.toLowerCase();
+console.log("configurationName: " + configurationName);
+```
