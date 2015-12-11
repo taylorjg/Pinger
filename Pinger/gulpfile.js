@@ -74,7 +74,7 @@
             var args = [];
             args = args.concat(taskNames);
             args.push(done);
-            sequence.apply(global, args);
+            sequence.apply(null, args);
         });
 
         return clientName;
@@ -83,7 +83,7 @@
     gulp.task("build", function (done) {
         var buildClientTaskNames = clients.map(buildClient);
         var args = ["clean", buildClientTaskNames, done];
-        sequence.apply(global, args);
+        sequence.apply(null, args);
     });
 
     gulp.task("default", ["build"]);
