@@ -15,24 +15,6 @@
         var outputMessageArea = window.pinger.outputMessageArea();
         var backend = window.pinger.backend(outputMessageArea.log);
 
-        var handleStateChanged = function (oldStateName, oldFlags, newStateName, newFlags, transportName) {
-
-            var enableConnectionButton = newFlags.isDisconnected || newFlags.isUnknown;
-            var disableConnectionButton = !enableConnectionButton;
-            var disableDisconnectionButton = enableConnectionButton;
-
-            $btnConnect.prop("disabled", disableConnectionButton);
-            $btnDisconnect.prop("disabled", disableDisconnectionButton);
-
-            $connectionState.text(newStateName);
-            $connectionState.toggleClass("connectionGood", newFlags.isConnected);
-            $connectionState.toggleClass("connectionBad", newFlags.isDisconnected);
-            $connectionState.toggleClass("connectionWobbly", newFlags.isConnecting || newFlags.isReconnecting);
-
-            $transportDetails.toggle(newFlags.isConnected);
-            $transportName.text(transportName);
-        };
-
         $btnConnect.click(function () {
             backend.start();
         });
@@ -51,5 +33,23 @@
         });
 
         backend.onStateChanged(handleStateChanged);
+
+        function handleStateChanged(oldStateName, oldFlags, newStateName, newFlags, transportName) {
+
+            var enableConnectionButton = newFlags.isDisconnected || newFlags.isUnknown;
+            var disableConnectionButton = !enableConnectionButton;
+            var disableDisconnectionButton = enableConnectionButton;
+
+            $btnConnect.prop("disabled", disableConnectionButton);
+            $btnDisconnect.prop("disabled", disableDisconnectionButton);
+
+            $connectionState.text(newStateName);
+            $connectionState.toggleClass("connectionGood", newFlags.isConnected);
+            $connectionState.toggleClass("connectionBad", newFlags.isDisconnected);
+            $connectionState.toggleClass("connectionWobbly", newFlags.isConnecting || newFlags.isReconnecting);
+
+            $transportDetails.toggle(newFlags.isConnected);
+            $transportName.text(transportName);
+        }
     });
 }());

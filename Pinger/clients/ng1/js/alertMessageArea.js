@@ -12,24 +12,27 @@
             $alertArea = $("#alertArea");
         });
 
-        var log = function (message) {
+        function safe(fn) {
             if ($alertArea) {
-                var existingContent = $alertArea.html();
-                var separator = existingContent.length > 0 ? "<br />" : "";
-                $alertArea.html(existingContent + separator + message);
-                $alertArea.scrollTop(1E10);
+                var remainingArgs = Array.prototype.slice.call(arguments, 1);
+                fn.apply(null, remainingArgs);
             }
-        };
+        }
 
-        var clear = function() {
-            if ($alertArea) {
-                $alertArea.empty();
-            }
-        };
+        function log(message) {
+            var existingContent = $alertArea.html();
+            var separator = existingContent.length > 0 ? "<br />" : "";
+            $alertArea.html(existingContent + separator + message);
+            $alertArea.scrollTop(1E10);
+        }
+
+        function clear() {
+            $alertArea.empty();
+        }
 
         return {
-            log: log,
-            clear: clear
+            log: _.partial(safe, log),
+            clear: _.partial(safe, clear)
         };
     };
 }());

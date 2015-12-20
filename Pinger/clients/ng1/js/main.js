@@ -1,4 +1,6 @@
-﻿(function() {
+﻿(function () {
+
+    // ReSharper disable FunctionsUsedBeforeDeclared
 
     "use strict";
 
@@ -15,7 +17,26 @@
         var outputMessageArea = window.pinger.outputMessageArea();
         var backend = window.pinger.backend(outputMessageArea.log);
 
-        var handleStateChanged = function (oldStateName, oldFlags, newStateName, newFlags, transportName) {
+        $btnConnect.click(function () {
+            backend.start();
+        });
+
+        $btnDisconnect.click(function () {
+            backend.stop();
+        });
+
+        $btnClear.click(function () {
+            alertMessageArea.clear();
+            outputMessageArea.clear();
+        });
+
+        backend.onMethod("testHub", "ping", function (n) {
+            alertMessageArea.log("ping " + n);
+        });
+
+        backend.onStateChanged(handleStateChanged);
+
+        function handleStateChanged(oldStateName, oldFlags, newStateName, newFlags, transportName) {
 
             var enableConnectionButton = newFlags.isDisconnected || newFlags.isUnknown;
             var disableConnectionButton = !enableConnectionButton;
@@ -31,25 +52,6 @@
 
             $transportDetails.toggle(newFlags.isConnected);
             $transportName.text(transportName);
-        };
-
-        $btnConnect.click(function () {
-            backend.start();
-        });
-
-        $btnDisconnect.click(function() {
-            backend.stop();
-        });
-
-        $btnClear.click(function() {
-            alertMessageArea.clear();
-            outputMessageArea.clear();
-        });
-
-        backend.onMethod("testHub", "ping", function (n) {
-            alertMessageArea.log("ping " + n);
-        });
-
-        backend.onStateChanged(handleStateChanged);
+        }
     });
 }());

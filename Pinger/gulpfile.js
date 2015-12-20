@@ -30,60 +30,50 @@
         return del(distDir);
     });
 
-    function buildClient(clientName) {
-
-        var taskNames = [];
-
-        var createFullTaskName = function (taskName) {
-            return [clientName, taskName].join("_");
-        };
-
-        var createTask = function(taskName, fn) {
-            var fullTaskName = createFullTaskName(taskName);
-            gulp.task(fullTaskName, fn);
-            taskNames.push(fullTaskName);
-        };
+    function makeClientBuildTask(clientName) {
 
         var clientSrcDir = srcDir + "/" + clientName;
         var clientDistDir = distDir + "/" + clientName;
-
         var clientHtmlFiles = clientSrcDir + "/html/**/*.html";
         var clientJsFiles = clientSrcDir + "/js/**/*.js";
         var clientCssFiles = clientSrcDir + "/css/**/*.css";
         var clientLibFiles = clientSrcDir + "/lib/**/*.js";
-
         var clientFiles = [
             clientHtmlFiles,
             clientJsFiles,
             clientCssFiles,
             clientLibFiles
         ];
+        var taskNames = [];
 
-        createTask("lint", function() {
+        var createFullTaskName = function (taskName) {
+            return [clientName, taskName].join("_");
+        };
+
+        var createTask = function(taskName, dependencies, fn) {
+            var fullTaskName = createFullTaskName(taskName);
+            gulp.task(fullTaskName, dependencies, fn);
+            taskNames.push(fullTaskName);
+            return fullTaskName;
+        };
+
+        var lintTaskName = createTask("lint", [], function() {
             return gulp.src(clientJsFiles)
                 .pipe(jshint())
                 .pipe(jshint.reporter("default"));
         });
 
-        createTask("copyFiles", function() {
+        var copyFilesTaskName = createTask("copyFiles", [lintTaskName], function() {
             return gulp.src(clientFiles)
                 .pipe(gulp.dest(clientDistDir));
         });
 
-        gulp.task(clientName, function (done) {
-            var args = [];
-            args = args.concat(taskNames);
-            args.push(done);
-            sequence.apply(null, args);
-        });
-
-        return clientName;
+        return copyFilesTaskName;
     };
 
     gulp.task("build", function (done) {
-        var buildClientTaskNames = clients.map(buildClient);
-        var args = ["clean", buildClientTaskNames, done];
-        sequence.apply(null, args);
+        var parallelClientBuildTaskNames = clients.map(makeClientBuildTask);
+        sequence("clean", parallelClientBuildTaskNames, done);
     });
 
     gulp.task("default", ["build"]);

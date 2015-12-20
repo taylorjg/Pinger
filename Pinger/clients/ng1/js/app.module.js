@@ -3,8 +3,8 @@
     "use strict";
 
     // https://github.com/angular/angular-hint/issues/81
-    if (window.angular.hint) {
-        window.angular.hint.onAny(function () {
+    if (angular.hint) {
+        angular.hint.onAny(function () {
             if (arguments.length >= 2) {
                 var severity = arguments[1];
                 var fn;
@@ -25,5 +25,5 @@
         });
     }
 
-    window.angular.module("appPinger", []);
+    angular.module("appPinger", []);
 }());

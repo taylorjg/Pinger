@@ -8,28 +8,31 @@
 
         var $outputArea;
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             $outputArea = $("#outputArea");
         });
 
-        var log = function (message) {
+        function safe(fn) {
             if ($outputArea) {
-                var existingContent = $outputArea.html();
-                var separator = existingContent.length > 0 ? "\n" : "";
-                $outputArea.html(existingContent + separator + message);
-                $outputArea.scrollTop(1E10);
+                var remainingArgs = Array.prototype.slice.call(arguments, 1);
+                fn.apply(null, remainingArgs);
             }
-        };
+        }
 
-        var clear = function() {
-            if ($outputArea) {
-                $outputArea.empty();
-            }
-        };
+        function log(message) {
+            var existingContent = $outputArea.html();
+            var separator = existingContent.length > 0 ? "\n" : "";
+            $outputArea.html(existingContent + separator + message);
+            $outputArea.scrollTop(1E10);
+        }
+
+        function clear() {
+            $outputArea.empty();
+        }
 
         return {
-            log: log,
-            clear: clear
+            log: _.partial(safe, log),
+            clear: _.partial(safe, clear)
         };
     };
 }());
