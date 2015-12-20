@@ -16,7 +16,7 @@
                 messages: "="
             },
             link: function(scope, element) {
-                scope.$watch("messages", function(messages) {
+                scope.$watchCollection("messages", function(messages) {
                     element.html(messages.join("\n"));
                     element.scrollTop(1E10);
                 });
