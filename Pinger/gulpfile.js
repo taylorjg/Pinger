@@ -35,11 +35,13 @@
         var clientSrcDir = srcDir + "/" + clientName;
         var clientDistDir = distDir + "/" + clientName;
         var clientHtmlFiles = clientSrcDir + "/html/**/*.html";
+        var clientNgHtmlFiles = clientSrcDir + "/js/**/*.html";
         var clientJsFiles = clientSrcDir + "/js/**/*.js";
         var clientCssFiles = clientSrcDir + "/css/**/*.css";
         var clientLibFiles = clientSrcDir + "/lib/**/*.js";
         var clientFiles = [
             clientHtmlFiles,
+            clientNgHtmlFiles,
             clientJsFiles,
             clientCssFiles,
             clientLibFiles

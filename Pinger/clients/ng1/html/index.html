@@ -10,6 +10,9 @@
     <script src="hint.js"></script>
     <script src="app.module.js"></script>
     <script src="home/home.controller.js"></script>
+    <script src="home/alertArea.directive.js"></script>
+    <script src="home/outputArea.directive.js"></script>
+    <script src="home/signalr.service.js"></script>
     <script src="alertMessageArea.js"></script>
     <script src="outputMessageArea.js"></script>
     <script src="backend.js"></script>
@@ -28,9 +31,9 @@
             <button type="button" id="btnClear" class="btn btn-sm btn-danger">Clear</button>
         </div>
         <br />
-        <div id="alertArea" class="row alert alert-success scrollableMessageArea"></div>
+        <div alert-area messages="vm.alertMessages"></div>
         <br />
-        <pre id="outputArea" class="row scrollableMessageArea"></pre>
+        <div output-area messages="vm.outputMessages"></div>
         <br />
     </div>
 </body>
