@@ -15,8 +15,8 @@
         var vm = this;
         vm.alertMessages = [];
         vm.outputMessages = [];
-        // vm.connectionState = "";
-        // vm.transportName = "";
+        vm.connectionState = "cn?";
+        vm.transportName = "tn?";
         vm.onConnect = onConnect;
         vm.onDisconnect = onDisconnect;
         vm.onClear = onClear;
@@ -58,9 +58,9 @@
         //     $transportName.text(transportName);
         // }
 
-        // function onPing(n) {
-        //     vm.alertMessages.push("ping " + n);
-        // }
+         function onPing(n) {
+             vm.alertMessages.push("ping " + n);
+         }
 
         function signalrLogListener() {
             var args = Array.prototype.slice.call(arguments);
@@ -71,7 +71,7 @@
             arr.splice(0, arr.length);
         }
 
-        // signalr.registerClientMethodListener("testHub", "ping", $scope, onPing);
+        signalr.registerClientMethodListener("testHub", "ping", $scope, onPing);
         // signalr.registerStateChangedListener($scope, signalrStateChangedListener);
         signalr.registerLogListener($scope, signalrLogListener);
     }

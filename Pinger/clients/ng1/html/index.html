@@ -20,8 +20,8 @@
     <br />
     <div class="container">
         <div class="row">
-            Connection state: <span id="connectionState" class="badge"></span>
-            <span id="transportDetails">Transport: <span id="transportName" class="badge connectionGood"></span></span>
+            Connection state: <span id="connectionState" class="badge">{{vm.connectionState}}</span>
+            <span id="transportDetails">Transport: <span id="transportName" class="badge connectionGood">{{vm.transportName}}</span></span>
             <button type="button" id="btnConnect" class="btn btn-sm btn-primary" ng-click="vm.onConnect()" ng-disabled="vm.connectBtnDisabled">Connect</button>
             <button type="button" id="btnDisconnect" class="btn btn-sm btn-primary" ng-click="vm.onDisconnect()" ng-disabled="vm.disconnectBtnDisabled">Disconnect</button>
             <button type="button" id="btnClear" class="btn btn-sm btn-danger" ng-click="vm.onClear()">Clear</button>

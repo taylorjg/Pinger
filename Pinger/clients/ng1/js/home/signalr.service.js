@@ -10,7 +10,8 @@
     function signalr() {
 
         var hubConnection = $.hubConnection();
-        //var hubProxies = {};
+        var hubProxies = {};
+        var registeredClientMethodListeners = [];
         var registeredLogListeners = [];
 
         function start() {
@@ -27,6 +28,36 @@
             hubConnection.stop();
         }
 
+        function registerClientMethodListener(hubName, methodName, scope, cb, context) {
+
+            registeredClientMethodListeners.push({
+                hubName: hubName,
+                methodName: methodName,
+                scope: scope,
+                cb: cb,
+                context: context
+            });
+
+            var hubProxy = getHubProxy(hubName);
+
+            // TODO: should only set this up once per hubName/methodName combination.
+            hubProxy.on(methodName, function () {
+                var args = arguments;
+                registeredClientMethodListeners
+                    .filter(function(item) {
+                        return item.hubName === hubName && item.methodName === methodName;
+                    })
+                    .forEach(function(item) {
+                        var scope = item.scope;
+                        var cb = item.cb;
+                        var context = item.context || null;
+                        safeApply(scope, function () {
+                            cb.apply(context, args);
+                        });
+                    });
+            });
+        }
+
         function registerLogListener(scope, cb, context) {
             registeredLogListeners.push({
                 scope: scope,
@@ -34,15 +65,6 @@
                 context: context
             });
         }
-
-        function unregisterLogListener(scope, cb) {
-            registeredLogListeners = registeredLogListeners.filter(function(registeredListener) {
-                return registeredListener.scope !== scope || registeredListener.cb !== cb;
-            });
-        }
-
-        // onStateChanged(scope, cb, context)
-        // onMethod(hubName, methodName, scope, cb, context)
 
         hubConnection.starting(function () {
             invokeLogListeners("[starting]");
@@ -77,6 +99,14 @@
             invokeLogListeners("[error]", "errorData:", errorData);
         });
 
+        function getHubProxy(hubName) {
+            var hubProxy = hubProxies[hubName];
+            if (!hubProxy) {
+                hubProxy = hubProxies[hubName] = hubConnection.createHubProxy(hubName);
+            }
+            return hubProxy;
+        }
+
         function invokeLogListeners() {
             var args = arguments;
             registeredLogListeners.forEach(function (registeredListener) {
@@ -98,15 +128,14 @@
             }
         }
 
+        // onStateChanged(scope, cb, context)
+
         return {
             start: start,
             stop: stop,
-            // registerClientMethodListener
-            // registerStateChangedListener
-            registerLogListener: registerLogListener,
-            // unregisterClientMethodListener
-            // unregisterStateChangedListener
-            unregisterLogListener: unregisterLogListener
+            registerClientMethodListener: registerClientMethodListener,
+            // registerStateChangedListener,
+            registerLogListener: registerLogListener
         };
     }
 }());
