@@ -12,6 +12,7 @@
         var hubConnection = $.hubConnection();
         var hubProxies = {};
         var registeredClientMethodListeners = [];
+        var registeredStateChangedListeners = [];
         var registeredLogListeners = [];
 
         function start() {
@@ -58,6 +59,14 @@
             });
         }
 
+        function registerStateChangedListener(scope, cb, context) {
+            registeredStateChangedListeners.push({
+                scope: scope,
+                cb: cb,
+                context: context
+            });
+        }
+
         function registerLogListener(scope, cb, context) {
             registeredLogListeners.push({
                 scope: scope,
@@ -93,6 +102,8 @@
             var oldStateName = states.oldState.toString();
             var newStateName = states.newState.toString();
             invokeLogListeners("[stateChanged]", "oldState:", oldStateName, "newState:", newStateName);
+            var transportName = hubConnection.transport ? hubConnection.transport.name : "";
+            invokeStateChangedListeners(states.newState, transportName);
         });
 
         hubConnection.error(function (errorData) {
@@ -107,12 +118,23 @@
             return hubProxy;
         }
 
+        function invokeStateChangedListeners(newState, transportName) {
+            registeredStateChangedListeners.forEach(function (item) {
+                var scope = item.scope;
+                var cb = item.cb;
+                var context = item.context || null;
+                safeApply(scope, function() {
+                    cb.call(context, newState, transportName);
+                });
+            });
+        }
+
         function invokeLogListeners() {
             var args = arguments;
-            registeredLogListeners.forEach(function (registeredListener) {
-                var scope = registeredListener.scope;
-                var cb = registeredListener.cb;
-                var context = registeredListener.context || null;
+            registeredLogListeners.forEach(function (item) {
+                var scope = item.scope;
+                var cb = item.cb;
+                var context = item.context || null;
                 safeApply(scope, function() {
                     cb.apply(context, args);
                 });
@@ -128,13 +150,11 @@
             }
         }
 
-        // onStateChanged(scope, cb, context)
-
         return {
             start: start,
             stop: stop,
             registerClientMethodListener: registerClientMethodListener,
-            // registerStateChangedListener,
+            registerStateChangedListener: registerStateChangedListener,
             registerLogListener: registerLogListener
         };
     }

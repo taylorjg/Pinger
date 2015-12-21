@@ -1,4 +1,4 @@
-﻿(function () {
+﻿(function() {
 
     "use strict";
 
@@ -40,29 +40,32 @@
             removeAll(vm.outputMessages);
         }
 
-        // function signalrStateChangedListener(oldStateName, oldFlags, newStateName, newFlags, transportName) {
-        // 
-        //     var enableConnectionButton = newFlags.isDisconnected || newFlags.isUnknown;
-        //     var disableConnectionButton = !enableConnectionButton;
-        //     var disableDisconnectionButton = enableConnectionButton;
-        // 
-        //     $btnConnect.prop("disabled", disableConnectionButton);
-        //     $btnDisconnect.prop("disabled", disableDisconnectionButton);
-        // 
-        //     $connectionState.text(newStateName);
-        //     $connectionState.toggleClass("connectionGood", newFlags.isConnected);
-        //     $connectionState.toggleClass("connectionBad", newFlags.isDisconnected);
-        //     $connectionState.toggleClass("connectionWobbly", newFlags.isConnecting || newFlags.isReconnecting);
-        // 
-        //     $transportDetails.toggle(newFlags.isConnected);
-        //     $transportName.text(transportName);
-        // }
+        function onPing(n) {
+            vm.alertMessages.push("ping " + n);
+        }
 
-         function onPing(n) {
-             vm.alertMessages.push("ping " + n);
-         }
+        function onStateChanged(newState, transportName) {
 
-        function signalrLogListener() {
+            //var enableConnectionButton = newFlags.isDisconnected || newFlags.isUnknown;
+            //var disableConnectionButton = !enableConnectionButton;
+            //var disableDisconnectionButton = enableConnectionButton;
+
+            //$btnConnect.prop("disabled", disableConnectionButton);
+            //$btnDisconnect.prop("disabled", disableDisconnectionButton);
+
+            //$connectionState.text(newStateName);
+            //$connectionState.toggleClass("connectionGood", newFlags.isConnected);
+            //$connectionState.toggleClass("connectionBad", newFlags.isDisconnected);
+            //$connectionState.toggleClass("connectionWobbly", newFlags.isConnecting || newFlags.isReconnecting);
+
+            //$transportDetails.toggle(newFlags.isConnected);
+            //$transportName.text(transportName);
+
+            vm.connectionState = newState;
+            vm.transportName = transportName;
+        }
+
+        function onLogMessage() {
             var args = Array.prototype.slice.call(arguments);
             vm.outputMessages.push(args.join(" "));
         }
@@ -72,7 +75,7 @@
         }
 
         signalr.registerClientMethodListener("testHub", "ping", $scope, onPing);
-        // signalr.registerStateChangedListener($scope, signalrStateChangedListener);
-        signalr.registerLogListener($scope, signalrLogListener);
+        signalr.registerStateChangedListener($scope, onStateChanged);
+        signalr.registerLogListener($scope, onLogMessage);
     }
 }());
