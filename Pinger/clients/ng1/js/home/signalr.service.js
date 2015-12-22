@@ -68,6 +68,11 @@
                 cb: cb,
                 context: context
             });
+
+            notifyStateChangedListenersOfStateChanged({
+                oldState: undefined,
+                newState: hubConnection.state
+            });
         }
 
         function registerLogListener(scope, cb, context) {
@@ -98,15 +103,9 @@
             invokeLogListeners("[reconnected]");
         });
 
-        hubConnection.stateChanged(function (states) {
-
-            var oldStateName = connectionStateToString(states.oldState);
-            var newStateName = connectionStateToString(states.newState);
-            invokeLogListeners("[stateChanged]", "oldState:", oldStateName, "newState:", newStateName);
-
-            var newStateFlags = getConnectionStateFlags(states.newState);
-            var transportName = newStateFlags.isConnected ? hubConnection.transport.name : "";
-            invokeStateChangedListeners(states.newState, newStateFlags, transportName);
+        hubConnection.stateChanged(function(states) {
+            notifyLogListenersOfStateChanged(states);
+            notifyStateChangedListenersOfStateChanged(states);
         });
 
         hubConnection.error(function (errorData) {
@@ -151,6 +150,18 @@
             } else {
                 scope.$apply(fn);
             }
+        }
+
+        function notifyLogListenersOfStateChanged(states) {
+            var oldStateName = connectionStateToString(states.oldState);
+            var newStateName = connectionStateToString(states.newState);
+            invokeLogListeners("[stateChanged]", "oldState:", oldStateName, "newState:", newStateName);
+        }
+
+        function notifyStateChangedListenersOfStateChanged(states) {
+            var newStateFlags = getConnectionStateFlags(states.newState);
+            var transportName = newStateFlags.isConnected ? hubConnection.transport.name : "";
+            invokeStateChangedListeners(states.newState, newStateFlags, transportName);
         }
 
         var connectionStateEnum = $.signalR.connectionState;
