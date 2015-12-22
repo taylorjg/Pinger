@@ -7,13 +7,16 @@
     angular.module("appPinger")
         .service("signalr", signalr);
 
-    function signalr() {
+    signalr.$inject = ["$filter"];
+
+    function signalr($filter) {
 
         var hubConnection = $.hubConnection();
         var hubProxies = {};
         var registeredClientMethodListeners = [];
         var registeredStateChangedListeners = [];
         var registeredLogListeners = [];
+        var connectionStateToString = $filter("connectionStateToString");
 
         function start() {
             hubConnection.start()
@@ -96,11 +99,8 @@
         });
 
         hubConnection.stateChanged(function (states) {
-            // TODO: use a filter to convert a connection state value to a string ?
-            //var oldStateName = connectionStateToString(states.oldState);
-            //var newStateName = connectionStateToString(states.newState);
-            var oldStateName = states.oldState.toString();
-            var newStateName = states.newState.toString();
+            var oldStateName = connectionStateToString(states.oldState);
+            var newStateName = connectionStateToString(states.newState);
             invokeLogListeners("[stateChanged]", "oldState:", oldStateName, "newState:", newStateName);
             var transportName = hubConnection.transport ? hubConnection.transport.name : "";
             invokeStateChangedListeners(states.newState, transportName);

@@ -103,6 +103,7 @@
   <ItemGroup>
     <None Include=".jshintrc" />
     <None Include="App.config" />
+    <Content Include="clients\ng1\js\home\connectionStateToString.filter.js" />
     <Content Include="clients\ng1\js\home\outputArea.template.html" />
     <Content Include="clients\ng1\js\home\alertArea.template.html" />
     <Content Include="clients\ng1\js\home\outputArea.directive.js" />

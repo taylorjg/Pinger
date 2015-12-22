@@ -15,24 +15,31 @@
         var vm = this;
         vm.alertMessages = [];
         vm.outputMessages = [];
-        vm.connectionState = "cn?";
-        vm.transportName = "tn?";
+        vm.connectionState = undefined;
+        vm.transportName = undefined;
         vm.onConnect = onConnect;
         vm.onDisconnect = onDisconnect;
         vm.onClear = onClear;
         vm.connectBtnDisabled = false;
         vm.disconnectBtnDisabled = false;
+        vm.showTransportName = false;
 
         function onConnect() {
             signalr.start();
+
+            // Temporary code - should really be doing this in onStateChanged
             vm.connectBtnDisabled = true;
             vm.disconnectBtnDisabled = false;
+            vm.showTransportName = true;
         }
 
         function onDisconnect() {
             signalr.stop();
+
+            // Temporary code - should really be doing this in onStateChanged
             vm.connectBtnDisabled = false;
             vm.disconnectBtnDisabled = true;
+            vm.showTransportName = false;
         }
 
         function onClear() {
