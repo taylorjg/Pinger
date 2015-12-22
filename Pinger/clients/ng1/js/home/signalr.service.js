@@ -99,11 +99,14 @@
         });
 
         hubConnection.stateChanged(function (states) {
+
             var oldStateName = connectionStateToString(states.oldState);
             var newStateName = connectionStateToString(states.newState);
             invokeLogListeners("[stateChanged]", "oldState:", oldStateName, "newState:", newStateName);
-            var transportName = hubConnection.transport ? hubConnection.transport.name : "";
-            invokeStateChangedListeners(states.newState, transportName);
+
+            var newStateFlags = getConnectionStateFlags(states.newState);
+            var transportName = newStateFlags.isConnected ? hubConnection.transport.name : "";
+            invokeStateChangedListeners(states.newState, newStateFlags, transportName);
         });
 
         hubConnection.error(function (errorData) {
@@ -118,13 +121,13 @@
             return hubProxy;
         }
 
-        function invokeStateChangedListeners(newState, transportName) {
+        function invokeStateChangedListeners(newState, newStateFlags, transportName) {
             registeredStateChangedListeners.forEach(function (item) {
                 var scope = item.scope;
                 var cb = item.cb;
                 var context = item.context || null;
                 safeApply(scope, function() {
-                    cb.call(context, newState, transportName);
+                    cb.call(context, newState, newStateFlags, transportName);
                 });
             });
         }
@@ -148,6 +151,19 @@
             } else {
                 scope.$apply(fn);
             }
+        }
+
+        var connectionStateEnum = $.signalR.connectionState;
+        var connectionStateEnumValues = _.values(connectionStateEnum);
+
+        function getConnectionStateFlags(connectionState) {
+            return {
+                isConnecting: connectionState === connectionStateEnum.connecting,
+                isConnected: connectionState === connectionStateEnum.connected,
+                isReconnecting: connectionState === connectionStateEnum.reconnecting,
+                isDisconnected: connectionState === connectionStateEnum.disconnected,
+                isUnknown: !_(connectionStateEnumValues).contains(connectionState)
+            };
         }
 
         return {

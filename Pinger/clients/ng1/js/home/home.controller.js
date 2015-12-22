@@ -16,30 +16,21 @@
         vm.alertMessages = [];
         vm.outputMessages = [];
         vm.connectionState = undefined;
-        vm.transportName = undefined;
+        vm.connectionStateClasses = {};
         vm.onConnect = onConnect;
-        vm.onDisconnect = onDisconnect;
-        vm.onClear = onClear;
         vm.connectBtnDisabled = false;
+        vm.onDisconnect = onDisconnect;
         vm.disconnectBtnDisabled = false;
+        vm.onClear = onClear;
+        vm.transportName = undefined;
         vm.showTransportName = false;
 
         function onConnect() {
             signalr.start();
-
-            // Temporary code - should really be doing this in onStateChanged
-            vm.connectBtnDisabled = true;
-            vm.disconnectBtnDisabled = false;
-            vm.showTransportName = true;
         }
 
         function onDisconnect() {
             signalr.stop();
-
-            // Temporary code - should really be doing this in onStateChanged
-            vm.connectBtnDisabled = false;
-            vm.disconnectBtnDisabled = true;
-            vm.showTransportName = false;
         }
 
         function onClear() {
@@ -51,25 +42,20 @@
             vm.alertMessages.push("ping " + n);
         }
 
-        function onStateChanged(newState, transportName) {
+        function onStateChanged(newState, newStateFlags, transportName) {
 
-            //var enableConnectionButton = newFlags.isDisconnected || newFlags.isUnknown;
-            //var disableConnectionButton = !enableConnectionButton;
-            //var disableDisconnectionButton = enableConnectionButton;
-
-            //$btnConnect.prop("disabled", disableConnectionButton);
-            //$btnDisconnect.prop("disabled", disableDisconnectionButton);
-
-            //$connectionState.text(newStateName);
-            //$connectionState.toggleClass("connectionGood", newFlags.isConnected);
-            //$connectionState.toggleClass("connectionBad", newFlags.isDisconnected);
-            //$connectionState.toggleClass("connectionWobbly", newFlags.isConnecting || newFlags.isReconnecting);
-
-            //$transportDetails.toggle(newFlags.isConnected);
-            //$transportName.text(transportName);
+            vm.connectBtnDisabled = !newStateFlags.isDisconnected && !newStateFlags.isUnknown;
+            vm.disconnectBtnDisabled = !vm.connectBtnDisabled;
 
             vm.connectionState = newState;
+            vm.connectionStateClasses = {
+                "connectionGood": newStateFlags.isConnected,
+                "connectionBad": newStateFlags.isDisconnected,
+                "connectionWobbly": newStateFlags.isConnecting || newStateFlags.isReconnecting
+            };
+
             vm.transportName = transportName;
+            vm.showTransportName = newStateFlags.isConnected;
         }
 
         function onLogMessage() {
