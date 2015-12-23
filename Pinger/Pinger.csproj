@@ -115,11 +115,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="clients\ng1\css\styles.css" />
-    <Content Include="clients\ng1\html\index.html" />
+    <Content Include="clients\ng1\index.html" />
     <Content Include="clients\ng1\js\app.module.js" />
     <Content Include="clients\ng1\js\home\home.controller.js" />
     <Content Include="clients\ng1\lib\hint.js" />
-    <Content Include="clients\nofw\html\index.html" />
+    <Content Include="clients\nofw\index.html" />
     <Content Include="clients\nofw\js\main.js" />
     <Content Include="clients\nofw\js\backend.js" />
     <Content Include="clients\nofw\js\alertMessageArea.js" />
