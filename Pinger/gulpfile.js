@@ -73,9 +73,14 @@
         return copyFilesTaskName;
     };
 
+    gulp.task("copyLandingPage", function () {
+        return gulp.src(srcDir + "/index.html")
+            .pipe(gulp.dest(distDir));
+    });
+
     gulp.task("build", function (done) {
         var parallelClientBuildTaskNames = clients.map(makeClientBuildTask);
-        sequence("clean", parallelClientBuildTaskNames, done);
+        sequence("clean", "copyLandingPage", parallelClientBuildTaskNames, done);
     });
 
     gulp.task("default", ["build"]);
