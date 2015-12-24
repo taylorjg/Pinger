@@ -13,7 +13,7 @@
 
         var hubConnection = $.hubConnection();
         var hubProxies = {};
-        var registeredClientMethodListeners = [];
+        var clientMethodForwarders = [];
         var registeredStateChangedListeners = [];
         var registeredLogListeners = [];
         var connectionStateToString = $filter("connectionStateToString");
@@ -33,32 +33,11 @@
         }
 
         function registerClientMethodListener(hubName, methodName, scope, cb, context) {
-
-            registeredClientMethodListeners.push({
-                hubName: hubName,
-                methodName: methodName,
+            var clientMethodForwarder = getClientMethodForwarder(hubName, methodName);
+            clientMethodForwarder.targets.push({
                 scope: scope,
                 cb: cb,
                 context: context
-            });
-
-            var hubProxy = getHubProxy(hubName);
-
-            // TODO: should only set this up once per hubName/methodName combination.
-            hubProxy.on(methodName, function () {
-                var args = arguments;
-                registeredClientMethodListeners
-                    .filter(function(item) {
-                        return item.hubName === hubName && item.methodName === methodName;
-                    })
-                    .forEach(function(item) {
-                        var scope = item.scope;
-                        var cb = item.cb;
-                        var context = item.context || null;
-                        safeApply(scope, function () {
-                            cb.apply(context, args);
-                        });
-                    });
             });
         }
 
@@ -69,7 +48,7 @@
                 context: context
             });
 
-            notifyStateChangedListenersOfStateChanged({
+            notifyStateChangedListenersOfStateChange({
                 oldState: undefined,
                 newState: hubConnection.state
             });
@@ -104,8 +83,8 @@
         });
 
         hubConnection.stateChanged(function(states) {
-            notifyLogListenersOfStateChanged(states);
-            notifyStateChangedListenersOfStateChanged(states);
+            notifyLogListenersOfStateChange(states);
+            notifyStateChangedListenersOfStateChange(states);
         });
 
         hubConnection.error(function (errorData) {
@@ -120,11 +99,42 @@
             return hubProxy;
         }
 
+        function getClientMethodForwarder(hubName, methodName) {
+
+            var clientMethodForwarder = _(clientMethodForwarders).findWhere({
+                hubName: hubName,
+                methodName: methodName
+            });
+
+            if (!clientMethodForwarder) {
+                clientMethodForwarder = {
+                    hubName: hubName,
+                    methodName: methodName,
+                    targets: []
+                };
+                clientMethodForwarders.push(clientMethodForwarder);
+                var hubProxy = getHubProxy(hubName);
+                hubProxy.on(methodName, function () {
+                    var args = arguments;
+                    clientMethodForwarder.targets.forEach(function(item) {
+                        var scope = item.scope;
+                        var cb = item.cb;
+                        var context = item.context;
+                        safeApply(scope, function() {
+                            cb.apply(context, args);
+                        });
+                    });
+                });
+            }
+
+            return clientMethodForwarder;
+        }
+
         function invokeStateChangedListeners(newState, newStateFlags, transportName) {
             registeredStateChangedListeners.forEach(function (item) {
                 var scope = item.scope;
                 var cb = item.cb;
-                var context = item.context || null;
+                var context = item.context;
                 safeApply(scope, function() {
                     cb.call(context, newState, newStateFlags, transportName);
                 });
@@ -136,7 +146,7 @@
             registeredLogListeners.forEach(function (item) {
                 var scope = item.scope;
                 var cb = item.cb;
-                var context = item.context || null;
+                var context = item.context;
                 safeApply(scope, function() {
                     cb.apply(context, args);
                 });
@@ -152,13 +162,13 @@
             }
         }
 
-        function notifyLogListenersOfStateChanged(states) {
+        function notifyLogListenersOfStateChange(states) {
             var oldStateName = connectionStateToString(states.oldState);
             var newStateName = connectionStateToString(states.newState);
             invokeLogListeners("[stateChanged]", "oldState:", oldStateName, "newState:", newStateName);
         }
 
-        function notifyStateChangedListenersOfStateChanged(states) {
+        function notifyStateChangedListenersOfStateChange(states) {
             var newStateFlags = getConnectionStateFlags(states.newState);
             var transportName = newStateFlags.isConnected ? hubConnection.transport.name : "";
             invokeStateChangedListeners(states.newState, newStateFlags, transportName);
