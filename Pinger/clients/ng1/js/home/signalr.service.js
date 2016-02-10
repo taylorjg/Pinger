@@ -7,9 +7,9 @@
     angular.module("appPinger")
         .service("signalr", signalr);
 
-    signalr.$inject = ["$filter"];
+    signalr.$inject = ["$rootScope", "$filter", "$timeout"];
 
-    function signalr($filter) {
+    function signalr($rootScope, $filter, $timeout) {
 
         var hubConnection = $.hubConnection();
         var hubProxies = {};
@@ -17,6 +17,11 @@
         var registeredStateChangedListeners = [];
         var registeredLogListeners = [];
         var connectionStateToString = $filter("connectionStateToString");
+
+        // ReSharper disable InconsistentNaming
+        var SIGNALR_STATE_CHANGED_EVENT = "signalr_state_changed";
+        var SIGNALR_LOG_MESSAGE_EVENT = "signalr_log_message";
+        // ReSharper restore InconsistentNaming
 
         function start() {
             hubConnection.start()
@@ -139,6 +144,7 @@
                     cb.call(context, newState, newStateFlags, transportName);
                 });
             });
+            raiseStateChangedEvent(newState, newStateFlags, transportName);
         }
 
         function invokeLogListeners() {
@@ -151,12 +157,13 @@
                     cb.apply(context, args);
                 });
             });
+            raiseLogEvent.apply(null, arguments);
         }
 
         function safeApply(scope, fn) {
             var phase = scope.$root.$$phase;
             if (phase === "$apply" || phase === "$digest") {
-                fn();
+                $timeout(fn);
             } else {
                 scope.$apply(fn);
             }
@@ -187,12 +194,51 @@
             };
         }
 
+        function raiseStateChangedEvent() {
+            raiseEvent(SIGNALR_STATE_CHANGED_EVENT, arguments);
+        }
+
+        function raiseLogEvent() {
+            raiseEvent(SIGNALR_LOG_MESSAGE_EVENT, arguments);
+        }
+
+        function raiseEvent(name, args) {
+            $rootScope.$emit.apply($rootScope, [name].concat([].slice.call(args)));
+        }
+
+        function subscribeToStateChangedEvents(scope, listener) {
+            subscribe(scope, listener, SIGNALR_STATE_CHANGED_EVENT);
+        }
+
+        function subscribeToLogEvents(scope, listener) {
+            subscribe(scope, listener, SIGNALR_LOG_MESSAGE_EVENT);
+        }
+
+        function subscribe(scope, listener, name) {
+            var deregistrationFn = $rootScope.$on(name, function () {
+                var args = arguments;
+                safeApply(scope, function () {
+                    listener.apply(null, args);
+                });
+            });
+            scope.$on("$destroy", deregistrationFn);
+        }
+
+        $timeout(function() {
+            notifyStateChangedListenersOfStateChange({
+                oldState: undefined,
+                newState: hubConnection.state
+            });
+        });
+
         return {
             start: start,
             stop: stop,
             registerClientMethodListener: registerClientMethodListener,
             registerStateChangedListener: registerStateChangedListener,
-            registerLogListener: registerLogListener
+            registerLogListener: registerLogListener,
+            subscribeToStateChangedEvents: subscribeToStateChangedEvents,
+            subscribeToLogEvents: subscribeToLogEvents
         };
     }
 }());

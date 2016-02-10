@@ -42,7 +42,9 @@
             vm.alertMessages.push("ping " + n);
         }
 
-        function onStateChanged(newState, newStateFlags, transportName) {
+        function onStateChanged(_, newState, newStateFlags, transportName) {
+
+            console.log(arguments);
 
             vm.connectBtnDisabled = !newStateFlags.isDisconnected && !newStateFlags.isUnknown;
             vm.disconnectBtnDisabled = !vm.connectBtnDisabled;
@@ -59,8 +61,11 @@
         }
 
         function onLogMessage() {
-            var args = Array.prototype.slice.call(arguments);
-            vm.outputMessages.push(args.join(" "));
+            console.log(arguments);
+            var args = [].slice.call(arguments);
+            args.shift();
+            var outputMessage = args.join(" ");
+            vm.outputMessages.push(outputMessage);
         }
 
         function removeAll(arr) {
@@ -68,7 +73,7 @@
         }
 
         signalr.registerClientMethodListener("testHub", "ping", $scope, onPing);
-        signalr.registerStateChangedListener($scope, onStateChanged);
-        signalr.registerLogListener($scope, onLogMessage);
+        signalr.subscribeToStateChangedEvents($scope, onStateChanged);
+        signalr.subscribeToLogEvents($scope, onLogMessage);
     }
 }());
