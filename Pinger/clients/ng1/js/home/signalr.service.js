@@ -91,13 +91,14 @@
             return clientMethodForwarder;
         }
 
-        function notifyLogListenersOfStateChange(states) {
-            var oldStateName = connectionStateToStringFilter(states.oldState);
-            var newStateName = connectionStateToStringFilter(states.newState);
-            raiseLogEvent("[stateChanged]", "oldState:", oldStateName, "newState:", newStateName);
-        }
+        function onStateChanged(states) {
 
-        function notifyStateChangedListenersOfStateChange(states) {
+            if (states.oldState !== undefined) {
+                var oldStateName = connectionStateToStringFilter(states.oldState);
+                var newStateName = connectionStateToStringFilter(states.newState);
+                raiseLogEvent("[stateChanged]", "oldState:", oldStateName, "newState:", newStateName);
+            }
+
             var newStateFlags = getConnectionStateFlags(states.newState);
             var transportName = newStateFlags.isConnected ? hubConnection.transport.name : "";
             raiseStateChangedEvent(states.newState, newStateFlags, transportName);
@@ -165,8 +166,7 @@
         });
 
         hubConnection.stateChanged(function (states) {
-            notifyLogListenersOfStateChange(states);
-            notifyStateChangedListenersOfStateChange(states);
+            onStateChanged(states);
         });
 
         hubConnection.error(function (errorData) {
@@ -174,7 +174,7 @@
         });
 
         $timeout(function () {
-            notifyStateChangedListenersOfStateChange({
+            onStateChanged({
                 oldState: undefined,
                 newState: hubConnection.state
             });
