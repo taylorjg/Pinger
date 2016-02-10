@@ -119,7 +119,9 @@
         }
 
         function raiseLogEvent() {
-            raiseEventHelper(SIGNALR_LOG_MESSAGE_EVENT, arguments);
+            var args = [].slice.call(arguments);
+            var message = args.join(" ");
+            raiseEventHelper(SIGNALR_LOG_MESSAGE_EVENT, [message]);
         }
 
         function raiseEventHelper(name, args) {

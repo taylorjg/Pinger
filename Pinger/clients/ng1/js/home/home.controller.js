@@ -60,12 +60,12 @@
             vm.showTransportName = newStateFlags.isConnected;
         }
 
-        function onLogMessage() {
-            console.log(arguments);
-            var args = [].slice.call(arguments);
-            args.shift();
-            var outputMessage = args.join(" ");
-            vm.outputMessages.push(outputMessage);
+        function onLogMessageToOutputArea(_, message) {
+            vm.outputMessages.push(message);
+        }
+
+        function onLogMessageToConsole(_, message) {
+            console.log(message);
         }
 
         function removeAll(arr) {
@@ -74,6 +74,7 @@
 
         signalr.registerClientMethodListener("testHub", "ping", $scope, onPing);
         signalr.subscribeToStateChangedEvents($scope, onStateChanged);
-        signalr.subscribeToLogEvents($scope, onLogMessage);
+        signalr.subscribeToLogEvents($scope, onLogMessageToOutputArea);
+        signalr.subscribeToLogEvents($scope, onLogMessageToConsole);
     }
 }());
