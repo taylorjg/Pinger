@@ -9,11 +9,10 @@
 
     signalr.$inject = ["$rootScope", "$filter", "$timeout"];
 
-    var SIGNALR_STATE_CHANGED_EVENT = "signalr_state_changed";
-    var SIGNALR_LOG_MESSAGE_EVENT = "signalr_log_message";
-
     function signalr($rootScope, $filter, $timeout) {
 
+        var SIGNALR_STATE_CHANGED_EVENT = "signalr_state_changed";
+        var SIGNALR_LOG_MESSAGE_EVENT = "signalr_log_message";
         var hubConnection = $.hubConnection();
         var hubProxies = {};
         var clientMethodForwarders = [];
@@ -37,10 +36,16 @@
 
         function registerClientMethodListener(hubName, methodName, scope, cb, context) {
             var clientMethodForwarder = getClientMethodForwarder(hubName, methodName);
-            clientMethodForwarder.targets.push({
+            var target = {
                 scope: scope,
                 cb: cb,
                 context: context
+            };
+            clientMethodForwarder.targets.push(target);
+            scope.$on("$destroy", function() {
+                _.remove(clientMethodForwarder.targets, function(t) {
+                    return t === target;
+                });
             });
         }
 
@@ -50,14 +55,6 @@
 
         function subscribeToLogEvents(scope, listener) {
             subscribeHelper(scope, listener, SIGNALR_LOG_MESSAGE_EVENT);
-        }
-
-        function getHubProxy(hubName) {
-            var hubProxy = hubProxies[hubName];
-            if (!hubProxy) {
-                hubProxy = hubProxies[hubName] = hubConnection.createHubProxy(hubName);
-            }
-            return hubProxy;
         }
 
         function getClientMethodForwarder(hubName, methodName) {
@@ -89,6 +86,14 @@
             }
 
             return clientMethodForwarder;
+        }
+
+        function getHubProxy(hubName) {
+            var hubProxy = hubProxies[hubName];
+            if (!hubProxy) {
+                hubProxy = hubProxies[hubName] = hubConnection.createHubProxy(hubName);
+            }
+            return hubProxy;
         }
 
         function onStateChanged(states) {
