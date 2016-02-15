@@ -25,6 +25,9 @@
             <span id="transportDetails" ng-show="vm.showTransportName">Transport: <span id="transportName" class="badge connectionGood">{{vm.transportName}}</span></span>
             <button type="button" id="btnConnect" class="btn btn-sm btn-primary" ng-click="vm.onConnect()" ng-disabled="vm.connectBtnDisabled">Connect</button>
             <button type="button" id="btnDisconnect" class="btn btn-sm btn-primary" ng-click="vm.onDisconnect()" ng-disabled="vm.disconnectBtnDisabled">Disconnect</button>
+        </div>
+        <hr class="row"/>
+        <div class="row">
             <button type="button" id="btnClear" class="btn btn-sm btn-danger" ng-click="vm.onClear()">Clear</button>
         </div>
         <br />
