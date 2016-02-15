@@ -10,6 +10,7 @@
     <script src="hint.js"></script>
     <script src="app.module.js"></script>
     <script src="home/home.controller.js"></script>
+    <script src="home/signalrPanel.directive.js"></script>
     <script src="home/alertArea.directive.js"></script>
     <script src="home/outputArea.directive.js"></script>
     <script src="home/connectionStateToString.filter.js"></script>
@@ -20,12 +21,7 @@
 <body ng-controller="HomeController as vm">
     <br />
     <div class="container">
-        <div class="row">
-            Connection state: <span id="connectionState" class="badge" ng-class="vm.connectionStateClasses">{{vm.connectionState | connectionStateToString}}</span>
-            <span id="transportDetails" ng-show="vm.showTransportName">Transport: <span id="transportName" class="badge connectionGood">{{vm.transportName}}</span></span>
-            <button type="button" id="btnConnect" class="btn btn-sm btn-primary" ng-click="vm.onConnect()" ng-disabled="vm.connectBtnDisabled">Connect</button>
-            <button type="button" id="btnDisconnect" class="btn btn-sm btn-primary" ng-click="vm.onDisconnect()" ng-disabled="vm.disconnectBtnDisabled">Disconnect</button>
-        </div>
+        <div signalr-panel></div>
         <hr class="row"/>
         <div class="row">
             <button type="button" id="btnClear" class="btn btn-sm btn-danger" ng-click="vm.onClear()">Clear</button>
@@ -35,6 +31,7 @@
         <br />
         <div output-area messages="vm.outputMessages"></div>
         <br />
+        <div signalr-panel></div>
     </div>
 </body>
 </html>
