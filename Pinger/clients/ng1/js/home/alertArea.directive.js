@@ -23,16 +23,17 @@
                     });
                 }
             },
-            controller: function($scope) {
+            controller: function() {
 
                 var vm = this;
                 vm.onClear = onClear;
 
                 function onClear() {
-                    _.remove($scope.messages, _.identity);
+                    _.remove(vm.messages);
                 }
             },
-            controllerAs: "vmAlertArea"
+            controllerAs: "vmAlertArea",
+            bindToController: true
         };
     }
 }());

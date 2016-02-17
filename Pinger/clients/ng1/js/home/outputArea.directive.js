@@ -18,22 +18,23 @@
             link: function(scope, element) {
                 var scrollableMessageAreaElement = element.find(".scrollableMessageArea");
                 if (scrollableMessageAreaElement) {
-                    scope.$watchCollection("messages", function(messages) {
+                    scope.$watchCollection("vmOutputArea.messages", function (messages) {
                         scrollableMessageAreaElement.html(messages.join("\n"));
                         scrollableMessageAreaElement.scrollTop(1E10);
                     });
                 }
             },
-            controller: function($scope) {
+            controller: function() {
 
                 var vm = this;
                 vm.onClear = onClear;
 
                 function onClear() {
-                    _.remove($scope.messages, _.identity);
+                    _.remove(vm.messages);
                 }
             },
-            controllerAs: "vmOutputArea"
+            controllerAs: "vmOutputArea",
+            bindToController: true
         };
     }
 }());

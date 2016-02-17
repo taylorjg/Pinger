@@ -1,6 +1,6 @@
 ﻿<div class="row">
     <div class="col-lg-11 alert alert-success scrollableMessageArea">
-        <div ng-repeat="message in messages">{{message}}</div>
+        <div ng-repeat="message in vmAlertArea.messages">{{message}}</div>
     </div>
     <div class="col-lg-1">
         <button type="button" id="btnClear" class=" btn btn-sm btn-danger" ng-click="vmAlertArea.onClear()">
