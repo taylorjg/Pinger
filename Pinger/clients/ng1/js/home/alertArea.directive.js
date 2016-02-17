@@ -18,7 +18,7 @@
             link: function(scope, element) {
                 var scrollableMessageAreaElement = element.find(".scrollableMessageArea");
                 if (scrollableMessageAreaElement) {
-                    scope.$watchCollection("messages", function() {
+                    scope.$watchCollection("vmAlertArea.messages", function () {
                         scrollableMessageAreaElement.scrollTop(1E10);
                     });
                 }
