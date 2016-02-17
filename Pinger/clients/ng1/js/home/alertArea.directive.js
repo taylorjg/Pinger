@@ -16,10 +16,23 @@
                 messages: "="
             },
             link: function(scope, element) {
-                scope.$watchCollection("messages", function() {
-                    element.scrollTop(1E10);
-                });
-            }
+                var scrollableMessageAreaElement = element.find(".scrollableMessageArea");
+                if (scrollableMessageAreaElement) {
+                    scope.$watchCollection("messages", function() {
+                        scrollableMessageAreaElement.scrollTop(1E10);
+                    });
+                }
+            },
+            controller: function($scope) {
+
+                var vm = this;
+                vm.onClear = onClear;
+
+                function onClear() {
+                    _.remove($scope.messages, _.identity);
+                }
+            },
+            controllerAs: "vmAlertArea"
         };
     }
 }());

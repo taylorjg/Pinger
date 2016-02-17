@@ -17,15 +17,15 @@
             templateUrl: "home/signalrPanel.template.html",
             controller: function ($scope) {
 
-                var vmSignalRPanel = this;
-                vmSignalRPanel.connectionState = "";
-                vmSignalRPanel.connectionStateClasses = {};
-                vmSignalRPanel.onConnect = onConnect;
-                vmSignalRPanel.connectBtnDisabled = false;
-                vmSignalRPanel.onDisconnect = onDisconnect;
-                vmSignalRPanel.disconnectBtnDisabled = false;
-                vmSignalRPanel.transportName = "";
-                vmSignalRPanel.showTransportName = false;
+                var vm = this;
+                vm.connectionState = "";
+                vm.connectionStateClasses = {};
+                vm.onConnect = onConnect;
+                vm.connectBtnDisabled = false;
+                vm.onDisconnect = onDisconnect;
+                vm.disconnectBtnDisabled = false;
+                vm.transportName = "";
+                vm.showTransportName = false;
 
                 function onConnect() {
                     signalr.start();
@@ -37,18 +37,18 @@
 
                 function onStateChangedEvent(_, newState, newStateFlags, transportName) {
 
-                    vmSignalRPanel.connectBtnDisabled = !newStateFlags.isDisconnected && !newStateFlags.isUnknown;
-                    vmSignalRPanel.disconnectBtnDisabled = !vmSignalRPanel.connectBtnDisabled;
+                    vm.connectBtnDisabled = !newStateFlags.isDisconnected && !newStateFlags.isUnknown;
+                    vm.disconnectBtnDisabled = !vm.connectBtnDisabled;
 
-                    vmSignalRPanel.connectionState = newState;
-                    vmSignalRPanel.connectionStateClasses = {
+                    vm.connectionState = newState;
+                    vm.connectionStateClasses = {
                         "connectionGood": newStateFlags.isConnected,
                         "connectionBad": newStateFlags.isDisconnected,
                         "connectionWobbly": newStateFlags.isConnecting || newStateFlags.isReconnecting
                     };
 
-                    vmSignalRPanel.transportName = transportName;
-                    vmSignalRPanel.showTransportName = newStateFlags.isConnected;
+                    vm.transportName = transportName;
+                    vm.showTransportName = newStateFlags.isConnected;
                 }
 
                 signalr.subscribeToStateChangedEvents($scope, onStateChangedEvent);

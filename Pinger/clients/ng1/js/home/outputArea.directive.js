@@ -16,11 +16,24 @@
                 messages: "="
             },
             link: function(scope, element) {
-                scope.$watchCollection("messages", function(messages) {
-                    element.html(messages.join("\n"));
-                    element.scrollTop(1E10);
-                });
-            }
+                var scrollableMessageAreaElement = element.find(".scrollableMessageArea");
+                if (scrollableMessageAreaElement) {
+                    scope.$watchCollection("messages", function(messages) {
+                        scrollableMessageAreaElement.html(messages.join("\n"));
+                        scrollableMessageAreaElement.scrollTop(1E10);
+                    });
+                }
+            },
+            controller: function($scope) {
+
+                var vm = this;
+                vm.onClear = onClear;
+
+                function onClear() {
+                    _.remove($scope.messages, _.identity);
+                }
+            },
+            controllerAs: "vmOutputArea"
         };
     }
 }());
