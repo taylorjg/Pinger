@@ -1,6 +1,8 @@
 ﻿<div class="row">
-    Connection state: <span id="connectionState" class="badge" ng-class="vmSignalRPanel.connectionStateClasses">{{vmSignalRPanel.connectionState | connectionStateToString}}</span>
-    <span id="transportDetails" ng-show="vmSignalRPanel.showTransportName">Transport: <span id="transportName" class="badge connectionGood">{{vmSignalRPanel.transportName}}</span></span>
-    <button type="button" id="btnConnect" class="btn btn-sm btn-primary" ng-click="vmSignalRPanel.onConnect()" ng-disabled="vmSignalRPanel.connectBtnDisabled">Connect</button>
-    <button type="button" id="btnDisconnect" class="btn btn-sm btn-primary" ng-click="vmSignalRPanel.onDisconnect()" ng-disabled="vmSignalRPanel.disconnectBtnDisabled">Disconnect</button>
+    <div class="col-md-8 col-md-offset-2">
+        Connection state: <span id="connectionState" class="badge" ng-class="vmSignalRPanel.connectionStateClasses">{{vmSignalRPanel.connectionState | connectionStateToString}}</span>
+        <span id="transportDetails" ng-show="vmSignalRPanel.showTransportName">Transport: <span id="transportName" class="badge connectionGood">{{vmSignalRPanel.transportName}}</span></span>
+        <button type="button" id="btnConnect" class="btn btn-sm btn-primary" ng-click="vmSignalRPanel.onConnect()" ng-disabled="vmSignalRPanel.connectBtnDisabled">Connect</button>
+        <button type="button" id="btnDisconnect" class="btn btn-sm btn-primary" ng-click="vmSignalRPanel.onDisconnect()" ng-disabled="vmSignalRPanel.disconnectBtnDisabled">Disconnect</button>
+    </div>
 </div>
