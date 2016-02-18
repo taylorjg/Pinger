@@ -19,6 +19,7 @@
         var connectionStateToStringFilter = $filter("connectionStateToString");
         var connectionStateEnum = $.signalR.connectionState;
         var connectionStateEnumValues = _.values(connectionStateEnum);
+        var firstStateChangeSeen = false;
 
         function start() {
             hubConnection.start()
@@ -51,6 +52,7 @@
 
         function subscribeToStateChangedEvents(scope, listener) {
             subscribeHelper(scope, listener, SIGNALR_STATE_CHANGED_EVENT);
+            ensureInitialStateChangeIsRaised();
         }
 
         function subscribeToLogEvents(scope, listener) {
@@ -173,6 +175,7 @@
         });
 
         hubConnection.stateChanged(function (states) {
+            firstStateChangeSeen = true;
             onStateChanged(states);
         });
 
@@ -180,12 +183,16 @@
             raiseLogEvent("[error]", "errorData:", errorData);
         });
 
-        $timeout(function () {
-            onStateChanged({
-                oldState: undefined,
-                newState: hubConnection.state
-            });
-        });
+        function ensureInitialStateChangeIsRaised() {
+            if (!firstStateChangeSeen) {
+                $timeout(function () {
+                    onStateChanged({
+                        oldState: undefined,
+                        newState: hubConnection.state
+                    });
+                });
+            }
+        }
 
         return {
             start: start,
