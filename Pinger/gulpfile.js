@@ -24,14 +24,20 @@
 
     var srcDir = "./clients";
     var distDir = "./bin/" + configurationName + "/dist";
-    var clients = ["nofw", "ng1", "ng2js", "ng2ts", "react"];
+    var noFwClient = { name: "nofw" };
+    var ng1Client = { name: "ng1" };
+    var ng2TsClient = { name: "ng2ts", tscTask: true };
+    var ng2JsClient = { name: "ng2js" };
+    var reactClient = { name: "react" };
+    var clients = [noFwClient, ng1Client, ng2TsClient, ng2JsClient, reactClient];
 
     gulp.task("clean", function () {
         return del(distDir);
     });
 
-    function makeClientBuildTask(clientName) {
+    function makeClientBuildTask(client) {
 
+        var clientName = client.name;
         var clientSrcDir = srcDir + "/" + clientName;
         var clientDistDir = distDir + "/" + clientName;
         var clientHtmlFiles = clientSrcDir + "/*.html";
