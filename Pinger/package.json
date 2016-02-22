@@ -1,7 +1,7 @@
 {
-  "name": "ReactTest1",
+  "name": "Pinger",
   "version": "0.0.0",
-  "description": "",
+  "description": "Simple app using OWIN/SignalR on the server and multiple browser clients: no UI framework, AngularJS 1.x, AngularJS 2 and React",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
