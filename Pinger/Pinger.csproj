@@ -112,6 +112,7 @@
     <Content Include="clients\ng1\js\home\outputArea.directive.js" />
     <Content Include="clients\ng1\js\home\signalr.service.js" />
     <Content Include="clients\ng1\js\home\alertArea.directive.js" />
+    <None Include="clients\ng2ts\tsconfig.json" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -122,6 +123,8 @@
     <Content Include="clients\ng1\js\app.module.js" />
     <Content Include="clients\ng1\js\home\home.controller.js" />
     <Content Include="clients\ng1\lib\hint.js" />
+    <Content Include="clients\ng2ts\app\main.ts" />
+    <Content Include="clients\ng2ts\index.html" />
     <Content Include="clients\nofw\index.html" />
     <Content Include="clients\nofw\js\main.js" />
     <Content Include="clients\nofw\js\backend.js" />
@@ -132,7 +135,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="clients\ng2js\" />
-    <Folder Include="clients\ng2ts\" />
     <Folder Include="clients\react\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
