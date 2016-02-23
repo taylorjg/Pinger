@@ -137,6 +137,9 @@
     <Folder Include="clients\ng2js\" />
     <Folder Include="clients\react\" />
   </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="clients\ng2ts\app\app.component.ts" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>echo { "configurationName": "$(ConfigurationName)" } &gt; $(ProjectDir)prebuild.json</PreBuildEvent>
