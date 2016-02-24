@@ -124,6 +124,7 @@
     <Content Include="clients\ng1\js\home\home.controller.js" />
     <Content Include="clients\ng1\lib\hint.js" />
     <Content Include="clients\ng2ts\app\main.ts" />
+    <Content Include="clients\ng2ts\css\styles.css" />
     <Content Include="clients\ng2ts\index.html" />
     <Content Include="clients\nofw\index.html" />
     <Content Include="clients\nofw\js\main.js" />
@@ -139,6 +140,10 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="clients\ng2ts\app\app.component.ts" />
+    <TypeScriptCompile Include="clients\ng2ts\app\home\outputArea.component.ts" />
+    <TypeScriptCompile Include="clients\ng2ts\app\home\alertArea.component.ts" />
+    <TypeScriptCompile Include="clients\ng2ts\app\home\signalrPanel.component.ts" />
+    <TypeScriptCompile Include="clients\ng2ts\app\home\signalR.service.ts" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

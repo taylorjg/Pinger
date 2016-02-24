@@ -1,0 +1,16 @@
+﻿.scrollableMessageArea {
+    height: 250px;
+    overflow-y: auto;
+}
+
+.connectionGood {
+    background-color: green;
+}
+
+.connectionBad {
+    background-color: red;
+}
+
+.connectionWobbly {
+    background-color: orange;
+}
