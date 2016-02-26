@@ -13,8 +13,8 @@ namespace Pinger
             using (TestHub.PingAllEverySecond())
             {
                 Console.WriteLine($"Listening on {url}");
-                Console.WriteLine("Press a key to quit...");
-                Console.ReadKey();
+                Console.WriteLine("Press CTRL+C to exit...");
+                CtrlC.Wait();
             }
         }
     }
