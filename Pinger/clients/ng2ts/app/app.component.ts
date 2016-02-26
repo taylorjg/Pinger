@@ -1,7 +1,8 @@
 import {Component} from "angular2/core";
-import {SignalRPanelComponent} from './home/signalrPanel.component';
-import {AlertAreaComponent} from './home/alertArea.component';
-import {OutputAreaComponent} from './home/outputArea.component';
+import {SignalRPanelComponent} from "./home/signalrPanel.component";
+import {AlertAreaComponent} from "./home/alertArea.component";
+import {OutputAreaComponent} from "./home/outputArea.component";
+import {SignalRService} from "./home/signalR.Service";
 
 @Component({
     selector: "app",
