@@ -1,5 +1,7 @@
 ﻿import {Component} from "angular2/core";
 import {SignalRService} from "./signalR.Service";
+import {ConnectionState} from "./connectionState";
+import {ConnectionStateFlags} from "./connectionStateFlags";
 
 @Component({
     selector: "signalr-panel",
@@ -15,7 +17,7 @@ import {SignalRService} from "./signalR.Service";
     providers: [SignalRService]
 })
 export class SignalRPanelComponent {
-    subscription = null;
+    stateChangedSubscription = null;
     constructor(private signalRService: SignalRService) {
     }
     onConnect() {
@@ -28,12 +30,12 @@ export class SignalRPanelComponent {
     }
     ngOnInit() {
         console.log("SignalRPanelComponent.ngOnInit");
-        this.subscription = this.signalRService.thing.subscribe(s => {
-            console.log("SignalRPanelComponent.onThing (%s)", s);
+        this.stateChangedSubscription = this.signalRService.stateChanged.subscribe(e => {
+            console.dir(e);
         });
     }
     ngOnDestroy() {
         console.log("SignalRPanelComponent.ngOnDestroy");
-        this.subscription.unsubscribe();
+        this.stateChangedSubscription.unsubscribe();
     }
 }

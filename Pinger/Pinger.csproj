@@ -140,7 +140,9 @@
     <Folder Include="clients\react\" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="clients\ng2ts\app\home\connectionState.ts" />
     <TypeScriptCompile Include="clients\ng2ts\app\app.component.ts" />
+    <TypeScriptCompile Include="clients\ng2ts\app\home\connectionStateFlags.ts" />
     <TypeScriptCompile Include="clients\ng2ts\app\home\outputArea.component.ts" />
     <TypeScriptCompile Include="clients\ng2ts\app\home\alertArea.component.ts" />
     <TypeScriptCompile Include="clients\ng2ts\app\home\signalrPanel.component.ts" />
