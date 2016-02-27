@@ -147,6 +147,7 @@
     <TypeScriptCompile Include="clients\ng2ts\app\home\alertArea.component.ts" />
     <TypeScriptCompile Include="clients\ng2ts\app\home\signalrPanel.component.ts" />
     <TypeScriptCompile Include="clients\ng2ts\app\home\signalR.service.ts" />
+    <TypeScriptCompile Include="clients\ng2ts\app\references.ts" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
