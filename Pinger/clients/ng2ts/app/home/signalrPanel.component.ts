@@ -15,8 +15,7 @@ import {ConnectionStateFlags} from "./connectionStateFlags";
                 <button type="button" id="btnConnect" class="btn btn-sm btn-primary" (click)="onConnect()">Connect</button>
                 <button type="button" id="btnDisconnect" class="btn btn-sm btn-primary" (click)="onDisconnect()">Disconnect</button>
             </div>
-        </div>`,
-    providers: [SignalRService]
+        </div>`
 })
 export class SignalRPanelComponent {
     private _stateChangedSubscription = null;

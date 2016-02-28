@@ -1,8 +1,8 @@
 import {Component} from "angular2/core";
+import {SignalRService} from "./home/signalR.Service";
 import {SignalRPanelComponent} from "./home/signalrPanel.component";
 import {AlertAreaComponent} from "./home/alertArea.component";
 import {OutputAreaComponent} from "./home/outputArea.component";
-import {SignalRService} from "./home/signalR.Service";
 
 @Component({
     selector: "app",
@@ -13,7 +13,8 @@ import {SignalRService} from "./home/signalR.Service";
         <output-area></output-area>
         <hr class="col-md-7 col-md-offset-2" />
         <signalr-panel></signalr-panel>`,
-    directives: [SignalRPanelComponent, AlertAreaComponent, OutputAreaComponent]
+    directives: [SignalRPanelComponent, AlertAreaComponent, OutputAreaComponent],
+    providers: [SignalRService]
 })
 export class AppComponent {
 }
