@@ -8,8 +8,8 @@ import {ConnectionStateFlags} from "./connectionStateFlags";
     template: `
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
-                Connection state: <span id="connectionState" class="badge">{{ "Disconnected" }}</span>
-                <span id="transportDetails">Transport: <span id="transportName" class="badge connectionGood">{{ "webSockets" }}</span></span>
+                Connection state: <span id="connectionState" class="badge">{{ connectionState.newState }}</span>
+                <span id="transportDetails">Transport: <span id="transportName" class="badge connectionGood">{{ connectionState.transportName }}</span></span>
                 <button type="button" id="btnConnect" class="btn btn-sm btn-primary" (click)="onConnect()">Connect</button>
                 <button type="button" id="btnDisconnect" class="btn btn-sm btn-primary" (click)="onDisconnect()">Disconnect</button>
             </div>
@@ -18,6 +18,7 @@ import {ConnectionStateFlags} from "./connectionStateFlags";
 })
 export class SignalRPanelComponent {
     stateChangedSubscription = null;
+    connectionState = new ConnectionState(4);
     constructor(private signalRService: SignalRService) {
     }
     onConnect() {
@@ -31,7 +32,7 @@ export class SignalRPanelComponent {
     ngOnInit() {
         console.log("SignalRPanelComponent.ngOnInit");
         this.stateChangedSubscription = this.signalRService.stateChanged.subscribe(e => {
-            console.dir(e);
+            this.connectionState = e;
         });
     }
     ngOnDestroy() {

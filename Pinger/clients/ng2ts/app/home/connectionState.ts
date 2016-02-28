@@ -4,5 +4,8 @@ export class ConnectionState {
     newStateFlags: ConnectionStateFlags;
     constructor(public newState: number, public transportName: string = "") {
         this.newStateFlags = new ConnectionStateFlags(this.newState);
+        if (!this.newStateFlags.isConnected) {
+            this.transportName = "";
+        }
     }
 }
