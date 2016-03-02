@@ -11,10 +11,37 @@ import {ConnectionStateFlags} from "./connectionStateFlags";
     template: `
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
-                Connection state: <span id="connectionState" class="badge" [ngClass]="connectionStateClasses">{{ connectionState() }}</span>
-                <span id="transportDetails" *ngIf="showTransportName">Transport: <span id="transportName" class="badge connectionGood">{{ transportName() }}</span></span>
-                <button type="button" id="btnConnect" class="btn btn-sm btn-primary" (click)="onConnect()">Connect</button>
-                <button type="button" id="btnDisconnect" class="btn btn-sm btn-primary" (click)="onDisconnect()">Disconnect</button>
+
+                Connection state:
+                <span
+                    class="badge"
+                    [ngClass]="connectionStateClasses">
+                        {{ connectionState() }}
+                </span>
+
+                <span *ngIf="showTransportName">
+                    Transport:
+                    <span
+                        class="badge connectionGood">
+                            {{ transportName() }}
+                    </span>
+                </span>
+
+                <button
+                    type="button"
+                    class="btn btn-sm btn-primary"
+                    (click)="onConnect()"
+                    [disabled]="connectBtnDisabled">
+                        Connect
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-sm btn-primary"
+                    (click)="onDisconnect()"
+                    [disabled]="disconnectBtnDisabled">
+                        Disconnect
+                </button>
             </div>
         </div>`,
     directives: [NgClass]
@@ -28,6 +55,8 @@ export class SignalRPanelComponent {
         connectionWobbly: false
     };
     showTransportName = false;
+    connectBtnDisabled = false;
+    disconnectBtnDisabled = true;
     constructor(private signalRService: SignalRService) {
     }
     connectionState(): string {
@@ -52,6 +81,8 @@ export class SignalRPanelComponent {
             this.connectionStateClasses.connectionBad = e.newStateFlags.isDisconnected;
             this.connectionStateClasses.connectionWobbly = e.newStateFlags.isConnecting || e.newStateFlags.isReconnecting;
             this.showTransportName = e.newStateFlags.isConnected;
+            this.connectBtnDisabled = !e.newStateFlags.isDisconnected && !e.newStateFlags.isUnknown;
+            this.disconnectBtnDisabled = !this.connectBtnDisabled;
         });
     }
     ngOnDestroy() {
