@@ -5,6 +5,7 @@ import {NgClass} from 'angular2/common';
 import {SignalRService} from "./signalR.Service";
 import {ConnectionState} from "./connectionState";
 import {ConnectionStateFlags} from "./connectionStateFlags";
+import {ConnectionStatePipe} from "./connectionState.pipe";
 
 @Component({
     selector: "signalr-panel",
@@ -16,7 +17,7 @@ import {ConnectionStateFlags} from "./connectionStateFlags";
                 <span
                     class="badge"
                     [ngClass]="connectionStateClasses">
-                        {{ connectionState }}
+                        {{ connectionState | connectionStateToString }}
                 </span>
 
                 <span *ngIf="showTransportName">
@@ -44,11 +45,12 @@ import {ConnectionStateFlags} from "./connectionStateFlags";
                 </button>
             </div>
         </div>`,
-    directives: [NgClass]
+    directives: [NgClass],
+    pipes: [ConnectionStatePipe]
 })
 export class SignalRPanelComponent implements OnInit, OnDestroy {
     private _stateChangedSubscription = null;
-    connectionState = "?";
+    connectionState = -1;
     connectionStateClasses = {
         connectionGood: false,
         connectionBad: false,
@@ -71,7 +73,7 @@ export class SignalRPanelComponent implements OnInit, OnDestroy {
     ngOnInit() {
         console.log("SignalRPanelComponent.ngOnInit");
         this._stateChangedSubscription = this.signalRService.stateChanged.subscribe((e: ConnectionState) => {
-            this.connectionState = e.newState.toString();
+            this.connectionState = e.newState;
             this.connectionStateClasses.connectionGood = e.newStateFlags.isConnected;
             this.connectionStateClasses.connectionBad = e.newStateFlags.isDisconnected;
             this.connectionStateClasses.connectionWobbly = e.newStateFlags.isConnecting || e.newStateFlags.isReconnecting;
