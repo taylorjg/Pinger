@@ -1,6 +1,6 @@
 ﻿// ReSharper disable InconsistentNaming
 
-import {Component} from "angular2/core";
+import {Component, OnInit, OnDestroy} from "angular2/core";
 import {NgClass} from 'angular2/common';
 import {SignalRService} from "./signalR.Service";
 import {ConnectionState} from "./connectionState";
@@ -16,14 +16,14 @@ import {ConnectionStateFlags} from "./connectionStateFlags";
                 <span
                     class="badge"
                     [ngClass]="connectionStateClasses">
-                        {{ connectionState() }}
+                        {{ connectionState }}
                 </span>
 
                 <span *ngIf="showTransportName">
                     Transport:
                     <span
                         class="badge connectionGood">
-                            {{ transportName() }}
+                            {{ transportName }}
                     </span>
                 </span>
 
@@ -46,24 +46,19 @@ import {ConnectionStateFlags} from "./connectionStateFlags";
         </div>`,
     directives: [NgClass]
 })
-export class SignalRPanelComponent {
+export class SignalRPanelComponent implements OnInit, OnDestroy {
     private _stateChangedSubscription = null;
-    private _connectionState: ConnectionState = null;
+    connectionState = "?";
     connectionStateClasses = {
         connectionGood: false,
         connectionBad: false,
         connectionWobbly: false
     };
+    transportName = "";
     showTransportName = false;
     connectBtnDisabled = false;
     disconnectBtnDisabled = true;
     constructor(private signalRService: SignalRService) {
-    }
-    connectionState(): string {
-        return this._connectionState != null ? this._connectionState.newState.toString() : "?";
-    }
-    transportName(): string {
-        return this._connectionState != null ? this._connectionState.transportName : "";
     }
     onConnect() {
         console.log("SignalRPanelComponent.onConnect");
@@ -76,10 +71,11 @@ export class SignalRPanelComponent {
     ngOnInit() {
         console.log("SignalRPanelComponent.ngOnInit");
         this._stateChangedSubscription = this.signalRService.stateChanged.subscribe((e: ConnectionState) => {
-            this._connectionState = e;
+            this.connectionState = e.newState.toString();
             this.connectionStateClasses.connectionGood = e.newStateFlags.isConnected;
             this.connectionStateClasses.connectionBad = e.newStateFlags.isDisconnected;
             this.connectionStateClasses.connectionWobbly = e.newStateFlags.isConnecting || e.newStateFlags.isReconnecting;
+            this.transportName = e.transportName;
             this.showTransportName = e.newStateFlags.isConnected;
             this.connectBtnDisabled = !e.newStateFlags.isDisconnected && !e.newStateFlags.isUnknown;
             this.disconnectBtnDisabled = !this.connectBtnDisabled;
