@@ -16,6 +16,5 @@
 })
 export class AlertAreaComponent {
     onClear() {
-        console.log("AlertAreaComponent.onClear");
     }
 }

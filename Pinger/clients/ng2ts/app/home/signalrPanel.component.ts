@@ -50,28 +50,25 @@ import {ConnectionStatePipe} from "./connectionState.pipe";
 })
 export class SignalRPanelComponent implements OnInit, OnDestroy {
     private _stateChangedSubscription = null;
-    connectionState = -1;
+    connectionState: number;
     connectionStateClasses = {
         connectionGood: false,
         connectionBad: false,
         connectionWobbly: false
     };
-    transportName = "";
+    transportName: string;
     showTransportName = false;
     connectBtnDisabled = false;
     disconnectBtnDisabled = true;
     constructor(private signalRService: SignalRService) {
     }
     onConnect() {
-        console.log("SignalRPanelComponent.onConnect");
         this.signalRService.start();
     }
     onDisconnect() {
-        console.log("SignalRPanelComponent.onDisconnect");
         this.signalRService.stop();
     }
     ngOnInit() {
-        console.log("SignalRPanelComponent.ngOnInit");
         this._stateChangedSubscription = this.signalRService.stateChanged.subscribe((e: ConnectionState) => {
             this.connectionState = e.newState;
             this.connectionStateClasses.connectionGood = e.newStateFlags.isConnected;
@@ -84,7 +81,6 @@ export class SignalRPanelComponent implements OnInit, OnDestroy {
         });
     }
     ngOnDestroy() {
-        console.log("SignalRPanelComponent.ngOnDestroy");
         this._stateChangedSubscription.unsubscribe();
     }
 }

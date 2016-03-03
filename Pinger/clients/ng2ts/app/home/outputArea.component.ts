@@ -14,6 +14,5 @@
 })
 export class OutputAreaComponent {
     onClear() {
-        console.log("OutputAreaComponent.onClear");
     }
 }
