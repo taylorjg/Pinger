@@ -1,7 +1,7 @@
 ﻿// ReSharper disable InconsistentNaming
 
 import {Component, OnInit, OnDestroy} from "angular2/core";
-import {NgClass} from 'angular2/common';
+import {NgClass} from "angular2/common";
 import {SignalRService} from "./signalR.Service";
 import {ConnectionState} from "./connectionState";
 import {ConnectionStateFlags} from "./connectionStateFlags";
@@ -20,10 +20,11 @@ import {ConnectionStatePipe} from "./connectionState.pipe";
                         {{ connectionState | connectionStateToString }}
                 </span>
 
-                <span *ngIf="showTransportName">
+                <span *ngIf="showTransport">
                     Transport:
                     <span
-                        class="badge connectionGood">
+                        class="badge"
+                        [ngClass]="connectionStateClasses">
                             {{ transportName }}
                     </span>
                 </span>
@@ -57,7 +58,7 @@ export class SignalRPanelComponent implements OnInit, OnDestroy {
         connectionWobbly: false
     };
     transportName: string;
-    showTransportName = false;
+    showTransport = false;
     connectBtnDisabled = false;
     disconnectBtnDisabled = true;
     constructor(private signalRService: SignalRService) {
@@ -75,7 +76,7 @@ export class SignalRPanelComponent implements OnInit, OnDestroy {
             this.connectionStateClasses.connectionBad = e.newStateFlags.isDisconnected;
             this.connectionStateClasses.connectionWobbly = e.newStateFlags.isConnecting || e.newStateFlags.isReconnecting;
             this.transportName = e.transportName;
-            this.showTransportName = e.newStateFlags.isConnected;
+            this.showTransport = !!this.transportName;
             this.connectBtnDisabled = !e.newStateFlags.isDisconnected && !e.newStateFlags.isUnknown;
             this.disconnectBtnDisabled = !this.connectBtnDisabled;
         });

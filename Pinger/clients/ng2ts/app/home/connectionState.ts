@@ -7,6 +7,6 @@ export class ConnectionState {
     constructor(private hubConnection: HubConnection) {
         this.newState = hubConnection.state;
         this.newStateFlags = new ConnectionStateFlags(this.newState);
-        this.transportName = this.newStateFlags.isConnected ? hubConnection.transport.name : "";
+        this.transportName = (hubConnection.transport && hubConnection.transport.name) ? hubConnection.transport.name : "";
     }
 }
