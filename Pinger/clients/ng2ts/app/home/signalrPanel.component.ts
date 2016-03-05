@@ -61,16 +61,16 @@ export class SignalRPanelComponent implements OnInit, OnDestroy {
     showTransport = false;
     connectBtnDisabled = false;
     disconnectBtnDisabled = true;
-    constructor(private signalRService: SignalRService) {
+    constructor(private _signalRService: SignalRService) {
     }
     onConnect() {
-        this.signalRService.start();
+        this._signalRService.start();
     }
     onDisconnect() {
-        this.signalRService.stop();
+        this._signalRService.stop();
     }
     ngOnInit() {
-        this._stateChangedSubscription = this.signalRService.stateChanged.subscribe((e: ConnectionState) => {
+        this._stateChangedSubscription = this._signalRService.stateChanged.subscribe((e: ConnectionState) => {
             this.connectionState = e.newState;
             this.connectionStateClasses.connectionGood = e.newStateFlags.isConnected;
             this.connectionStateClasses.connectionBad = e.newStateFlags.isDisconnected;
