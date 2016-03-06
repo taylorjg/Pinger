@@ -2,6 +2,7 @@
 
 import {Injectable, EventEmitter, Output} from "angular2/core";
 import {ConnectionState} from "./connectionState";
+import {ConnectionStatePipe} from "./connectionState.pipe";
 
 @Injectable()
 export class SignalRService {
@@ -27,7 +28,7 @@ export class SignalRService {
     }
     private _raiseStateChanged() {
         var connectionState = new ConnectionState(this._hubConnection);
-        this._raiseLogEvent(["newState", connectionState.newState].join(" "));
+        this._raiseLogEvent(["newState", ConnectionStatePipe.connectionStateToString(connectionState.newState)].join(" "));
         this.stateChanged.emit(connectionState);
     }
     private _raiseLogEvent(s: string) {
