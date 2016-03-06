@@ -33,11 +33,11 @@ export class SignalRService {
         });
     }
     start() {
-        this._hubConnection.start().then(
-            () => {
+        this._hubConnection.start()
+            .done(() => {
                 this._raiseLogEvent("[start.done]");
-            },
-            (reason: string) => {
+            })
+            .fail(reason => {
                 this._raiseLogEvent("[start.fail]", "reason:", reason);
             });
     }
