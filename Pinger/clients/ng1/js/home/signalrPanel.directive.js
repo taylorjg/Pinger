@@ -25,7 +25,7 @@
                 vm.onDisconnect = onDisconnect;
                 vm.disconnectBtnDisabled = false;
                 vm.transportName = "";
-                vm.showTransportName = false;
+                vm.showTransport = false;
 
                 function onConnect() {
                     signalr.start();
@@ -48,7 +48,7 @@
                     };
 
                     vm.transportName = transportName;
-                    vm.showTransportName = newStateFlags.isConnected;
+                    vm.showTransport = !!transportName;
                 }
 
                 signalr.subscribeToStateChangedEvents($scope, onStateChangedEvent);

@@ -44,8 +44,11 @@
             $connectionState.toggleClass("connectionBad", newFlags.isDisconnected);
             $connectionState.toggleClass("connectionWobbly", newFlags.isConnecting || newFlags.isReconnecting);
 
-            $transportDetails.toggle(newFlags.isConnected);
+            $transportDetails.toggle(!!transportName);
             $transportName.text(transportName);
+            $transportName.toggleClass("connectionGood", newFlags.isConnected);
+            $transportName.toggleClass("connectionBad", newFlags.isDisconnected);
+            $transportName.toggleClass("connectionWobbly", newFlags.isConnecting || newFlags.isReconnecting);
         }
     });
 }());

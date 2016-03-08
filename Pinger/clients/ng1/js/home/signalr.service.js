@@ -107,7 +107,7 @@
             }
 
             var newStateFlags = getConnectionStateFlags(states.newState);
-            var transportName = newStateFlags.isConnected ? hubConnection.transport.name : "";
+            var transportName = hubConnection.transport && hubConnection.transport.name ? hubConnection.transport.name : "";
             raiseStateChangedEvent(states.newState, newStateFlags, transportName);
         }
 

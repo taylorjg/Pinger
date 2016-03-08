@@ -94,7 +94,7 @@
                 var newFlags = getConnectionStateFlags(states.newState);
                 var oldStateName = connectionStateToString(states.oldState);
                 var newStateName = connectionStateToString(states.newState);
-                var transportName = newFlags.isConnected ? hubConnection.transport.name : "";
+                var transportName = hubConnection.transport && hubConnection.transport.name ? hubConnection.transport.name : "";
                 cb(oldStateName, oldFlags, newStateName, newFlags, transportName);
             });
 
