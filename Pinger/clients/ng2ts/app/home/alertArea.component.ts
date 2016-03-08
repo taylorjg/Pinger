@@ -10,7 +10,7 @@ import {Component, ViewChild} from "angular2/core";
                 <div *ngFor="#message of _messages">{{ message }}</div>
             </div>
             <div class="col-md-1">
-                <button type="button" id="btnClear" class=" btn btn-sm btn-danger" (click)="onClear()">
+                <button type="button" id="btnClear" class="btn btn-sm btn-danger" (click)="onClear()">
                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                 </button>
             </div>

@@ -16,18 +16,37 @@
 <body>
     <br />
     <div class="container">
+
         <div class="row">
-            Connection state: <span id="connectionState" class="badge"></span>
-            <span id="transportDetails">Transport: <span id="transportName" class="badge connectionGood"></span></span>
-            <button type="button" id="btnConnect" class="btn btn-sm btn-primary">Connect</button>
-            <button type="button" id="btnDisconnect" class="btn btn-sm btn-primary">Disconnect</button>
-            <button type="button" id="btnClear" class="btn btn-sm btn-danger">Clear</button>
+            <div class="col-md-8 col-md-offset-2">
+                Connection state: <span id="connectionState" class="badge"></span>
+                <span id="transportDetails">Transport: <span id="transportName" class="badge connectionGood"></span></span>
+                <button type="button" id="btnConnect" class="btn btn-sm btn-primary">Connect</button>
+                <button type="button" id="btnDisconnect" class="btn btn-sm btn-primary">Disconnect</button>
+            </div>
         </div>
-        <br />
-        <div id="alertArea" class="row alert alert-success scrollableMessageArea"></div>
-        <br />
-        <pre id="outputArea" class="row scrollableMessageArea"></pre>
-        <br />
+
+        <hr class="col-md-7 col-md-offset-2" />
+
+        <div id="alertArea" class="row">
+            <div class="col-md-7 col-md-offset-2 alert alert-success scrollableMessageArea"></div>
+            <div class="col-md-1">
+                <button type="button" class="btn btn-sm btn-danger">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+
+        <hr class="col-md-7 col-md-offset-2" />
+
+        <div id="outputArea" class="row">
+            <pre class="col-md-7 col-md-offset-2 scrollableMessageArea"></pre>
+            <div class="col-md-1">
+                <button type="button" class="btn btn-sm btn-danger">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
     </div>
 </body>
 </html>

@@ -2,6 +2,8 @@
 
     "use strict";
 
+    // ReSharper disable FunctionsUsedBeforeDeclared
+
     $(document).ready(function () {
 
         var $connectionState = $("#connectionState");
@@ -9,7 +11,6 @@
         var $transportName = $("#transportName");
         var $btnConnect = $("#btnConnect");
         var $btnDisconnect = $("#btnDisconnect");
-        var $btnClear = $("#btnClear");
 
         var alertMessageArea = window.pinger.alertMessageArea();
         var outputMessageArea = window.pinger.outputMessageArea();
@@ -21,11 +22,6 @@
 
         $btnDisconnect.click(function() {
             backend.stop();
-        });
-
-        $btnClear.click(function() {
-            alertMessageArea.clear();
-            outputMessageArea.clear();
         });
 
         backend.onMethod("testHub", "ping", function (n) {

@@ -6,33 +6,24 @@
 
     window.pinger.outputMessageArea = function () {
 
-        var $outputArea;
+        var $scrollableMessageArea;
 
         $(document).ready(function () {
-            $outputArea = $("#outputArea");
+            var $outputArea = $("#outputArea");
+            $scrollableMessageArea = $outputArea.find(".scrollableMessageArea");
+            var $btnClear = $outputArea.find("button");
+            $btnClear.click(function () {
+                $scrollableMessageArea.empty();
+            });
         });
 
-        function safe(fn) {
-            if ($outputArea) {
-                var remainingArgs = Array.prototype.slice.call(arguments, 1);
-                fn.apply(null, remainingArgs);
-            }
-        }
-
         function log(message) {
-            var existingContent = $outputArea.html();
-            var separator = existingContent.length > 0 ? "\n" : "";
-            $outputArea.html(existingContent + separator + message);
-            $outputArea.scrollTop(1E10);
-        }
-
-        function clear() {
-            $outputArea.empty();
+            $scrollableMessageArea.append($("<div>", { html: message }));
+            $scrollableMessageArea.scrollTop(1E10);
         }
 
         return {
-            log: _.partial(safe, log),
-            clear: _.partial(safe, clear)
+            log: log
         };
     };
 }());
