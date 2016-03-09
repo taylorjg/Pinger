@@ -1,15 +1,20 @@
 ﻿// ReSharper disable InconsistentNaming
 
 import {Injectable, EventEmitter, Output} from "angular2/core";
+import {Observable} from "rxjs/Observable";
+import {Observer} from "rxjs/Observer";
+import {BehaviorSubject} from "rxjs/subject/BehaviorSubject";
 import {ConnectionState} from "./connectionState";
 import {ConnectionStatePipe} from "./connectionState.pipe";
 
 @Injectable()
 export class SignalRService {
-    @Output() stateChanged: EventEmitter<ConnectionState> = new EventEmitter();
+    @Output() stateChanged$: Observable<ConnectionState> = null;
     @Output() logEvent: EventEmitter<string> = new EventEmitter();
     private _hubConnection = $.hubConnection();
     constructor() {
+        var initialConnectionState = new ConnectionState(this._hubConnection);
+        this.stateChanged$ = new BehaviorSubject(initialConnectionState);
         this._hubConnection.starting(() => {
             this._raiseLogEvent("[starting]");
         });
@@ -53,7 +58,7 @@ export class SignalRService {
         }
 
         var connectionState = new ConnectionState(this._hubConnection);
-        this.stateChanged.emit(connectionState);
+        (<Observer<ConnectionState>>this.stateChanged$).next(connectionState);
     }
     private _raiseLogEvent(...args) {
         this.logEvent.emit(args.join(" "));

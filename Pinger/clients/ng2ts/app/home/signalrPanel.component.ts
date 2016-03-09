@@ -2,6 +2,7 @@
 
 import {Component, OnInit, OnDestroy} from "angular2/core";
 import {NgClass} from "angular2/common";
+import {Subscription} from "rxjs/Subscription";
 import {SignalRService} from "./signalR.Service";
 import {ConnectionState} from "./connectionState";
 import {ConnectionStateFlags} from "./connectionStateFlags";
@@ -50,7 +51,7 @@ import {ConnectionStatePipe} from "./connectionState.pipe";
     pipes: [ConnectionStatePipe]
 })
 export class SignalRPanelComponent implements OnInit, OnDestroy {
-    private _stateChangedSubscription = null;
+    private _stateChangedSubscription: Subscription<ConnectionState>;
     connectionState: number;
     connectionStateClasses = {
         connectionGood: false,
@@ -70,7 +71,7 @@ export class SignalRPanelComponent implements OnInit, OnDestroy {
         this._signalRService.stop();
     }
     ngOnInit() {
-        this._stateChangedSubscription = this._signalRService.stateChanged.subscribe((e: ConnectionState) => {
+        this._stateChangedSubscription = this._signalRService.stateChanged$.subscribe((e: ConnectionState) => {
             this.connectionState = e.newState;
             this.connectionStateClasses.connectionGood = e.newStateFlags.isConnected;
             this.connectionStateClasses.connectionBad = e.newStateFlags.isDisconnected;
