@@ -22,15 +22,21 @@ import {OutputAreaComponent} from "./home/outputArea.component";
 export class AppComponent {
     @ViewChild("alertArea") private _alertArea: AlertAreaComponent;
     @ViewChild("outputArea") private _outputArea: OutputAreaComponent;
+    private _pingSubscription: Subscription<any[]>;
     private _logEventSubscription: Subscription<string>;
     constructor(private _signalRService: SignalRService) {
     }
     ngOnInit() {
+        var ping$ = this._signalRService.registerClientMethodListener("testHub", "ping");
+        this._pingSubscription = ping$.subscribe(n => {
+            this._alertArea.addMessage(`ping ${n}`);
+        });
         this._logEventSubscription = this._signalRService.logEvent$.subscribe(message => {
             this._outputArea.addMessage(message);
         });
     }
     ngOnDestroy() {
+        this._pingSubscription.unsubscribe();
         this._logEventSubscription.unsubscribe();
     }
 }

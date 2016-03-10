@@ -5,6 +5,7 @@ import {Observable} from "rxjs/Observable";
 import {Observer} from "rxjs/Observer";
 import {Subject} from "rxjs/Subject";
 import {BehaviorSubject} from "rxjs/subject/BehaviorSubject";
+import {Subscription} from "rxjs/Subscription";
 import {ConnectionState} from "./connectionState";
 import {ConnectionStatePipe} from "./connectionState.pipe";
 
@@ -13,6 +14,7 @@ export class SignalRService {
     @Output() stateChanged$: Observable<ConnectionState>;
     @Output() logEvent$: Observable<string>;
     private _hubConnection = $.hubConnection();
+    private _clientMethodListener$: Subject<any[]>;
     constructor() {
         var initialConnectionState = new ConnectionState(this._hubConnection);
         this.stateChanged$ = new BehaviorSubject(initialConnectionState);
@@ -51,6 +53,15 @@ export class SignalRService {
     stop() {
         this._hubConnection.stop();
     }
+    registerClientMethodListener(hubName: string, methodName: string): Observable<any[]> {
+        this._clientMethodListener$ = new Subject();
+        var hubProxy = this._hubConnection.createHubProxy(hubName);
+        hubProxy.on(methodName, (msg: any[]) => {
+            this._clientMethodListener$.next(msg);
+        });
+        return this._clientMethodListener$;
+    }
+
     private _raiseStateChanged(change: SignalRStateChange) {
 
         var oldStateName = ConnectionStatePipe.connectionStateToString(change.oldState);
