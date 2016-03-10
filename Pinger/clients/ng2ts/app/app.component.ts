@@ -1,6 +1,7 @@
 // ReSharper disable InconsistentNaming
 
 import {Component, ViewChild} from "angular2/core";
+import {Subscription} from "rxjs/Subscription";
 import {SignalRService} from "./home/signalR.Service";
 import {SignalRPanelComponent} from "./home/signalrPanel.component";
 import {AlertAreaComponent} from "./home/alertArea.component";
@@ -21,11 +22,11 @@ import {OutputAreaComponent} from "./home/outputArea.component";
 export class AppComponent {
     @ViewChild("alertArea") private _alertArea: AlertAreaComponent;
     @ViewChild("outputArea") private _outputArea: OutputAreaComponent;
-    private _logEventSubscription = null;
+    private _logEventSubscription: Subscription<string>;
     constructor(private _signalRService: SignalRService) {
     }
     ngOnInit() {
-        this._logEventSubscription = this._signalRService.logEvent.subscribe(message => {
+        this._logEventSubscription = this._signalRService.logEvent$.subscribe(message => {
             this._outputArea.addMessage(message);
         });
     }
