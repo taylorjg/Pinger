@@ -71,18 +71,19 @@ export class SignalRPanelComponent implements OnInit, OnDestroy {
         this._signalRService.stop();
     }
     ngOnInit() {
-        this._stateChangedSubscription = this._signalRService.stateChanged$.subscribe((e: ConnectionState) => {
-            this.connectionState = e.newState;
-            this.connectionStateClasses.connectionGood = e.newStateFlags.isConnected;
-            this.connectionStateClasses.connectionBad = e.newStateFlags.isDisconnected;
-            this.connectionStateClasses.connectionWobbly = e.newStateFlags.isConnecting || e.newStateFlags.isReconnecting;
-            this.transportName = e.transportName;
-            this.showTransport = !!this.transportName;
-            this.connectBtnDisabled = !e.newStateFlags.isDisconnected && !e.newStateFlags.isUnknown;
-            this.disconnectBtnDisabled = !this.connectBtnDisabled;
-        });
+        this._stateChangedSubscription = this._signalRService.stateChanged$.subscribe(this._onStateChanged.bind(this));
     }
     ngOnDestroy() {
         this._stateChangedSubscription.unsubscribe();
+    }
+    private _onStateChanged(e: ConnectionState) {
+        this.connectionState = e.newState;
+        this.connectionStateClasses.connectionGood = e.newStateFlags.isConnected;
+        this.connectionStateClasses.connectionBad = e.newStateFlags.isDisconnected;
+        this.connectionStateClasses.connectionWobbly = e.newStateFlags.isConnecting || e.newStateFlags.isReconnecting;
+        this.transportName = e.transportName;
+        this.showTransport = !!this.transportName;
+        this.connectBtnDisabled = !e.newStateFlags.isDisconnected && !e.newStateFlags.isUnknown;
+        this.disconnectBtnDisabled = !this.connectBtnDisabled;
     }
 }

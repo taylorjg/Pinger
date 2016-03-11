@@ -56,7 +56,7 @@ export class SignalRService {
     registerClientMethodListener(hubName: string, methodName: string): Observable<any[]> {
         this._clientMethodListener$ = new Subject();
         var hubProxy = this._hubConnection.createHubProxy(hubName);
-        hubProxy.on(methodName, (msg: any[]) => {
+        hubProxy.on(methodName, (...msg: any[]) => {
             this._clientMethodListener$.next(msg);
         });
         return this._clientMethodListener$;
