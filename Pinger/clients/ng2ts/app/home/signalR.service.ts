@@ -21,7 +21,7 @@ export class SignalRService {
     constructor() {
         var initialConnectionState = new ConnectionState(this._hubConnection);
         this.stateChanged$ = new BehaviorSubject(initialConnectionState);
-        this.logEvent$ = new Subject();
+        this.logEvent$ = new Subject<string>();
         this._hubConnection.starting(() => {
             this._raiseLogEvent("[starting]");
         });
@@ -64,11 +64,11 @@ export class SignalRService {
         var newStateName = ConnectionStatePipe.connectionStateToString(change.newState);
         this._raiseLogEvent("[stateChanged]", "oldState:", oldStateName, "newState:", newStateName);
         var connectionState = new ConnectionState(this._hubConnection);
-        (<Observer<ConnectionState>>this.stateChanged$).next(connectionState);
+        (<Subject<ConnectionState>>this.stateChanged$).next(connectionState);
     }
     private _raiseLogEvent(...args) {
         var message = args.join(" ");
-        (<Observer<string>>this.logEvent$).next(message);
+        (<Subject<string>>this.logEvent$).next(message);
     }
     private _getClientMethodSubject(hubName: string, methodName: string): Subject<any[]> {
         var tuple = this._lookupClientMethodSubject(hubName, methodName);
