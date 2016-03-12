@@ -9,12 +9,15 @@ import {Subscription} from "rxjs/Subscription";
 import {ConnectionState} from "./connectionState";
 import {ConnectionStatePipe} from "./connectionState.pipe";
 
+type ClientMethodTuple = [string, string, Subject<any[]>];
+
 @Injectable()
 export class SignalRService {
     @Output() stateChanged$: Observable<ConnectionState>;
     @Output() logEvent$: Observable<string>;
     private _hubConnection = $.hubConnection();
-    private _clientMethodListener$: Subject<any[]>;
+    private _hubProxyDictionary = {};
+    private _clientMethodSubjects: ClientMethodTuple[] = [];
     constructor() {
         var initialConnectionState = new ConnectionState(this._hubConnection);
         this.stateChanged$ = new BehaviorSubject(initialConnectionState);
@@ -54,25 +57,63 @@ export class SignalRService {
         this._hubConnection.stop();
     }
     registerClientMethodListener(hubName: string, methodName: string): Observable<any[]> {
-        this._clientMethodListener$ = new Subject();
-        var hubProxy = this._hubConnection.createHubProxy(hubName);
-        hubProxy.on(methodName, (...msg: any[]) => {
-            this._clientMethodListener$.next(msg);
-        });
-        return this._clientMethodListener$;
+        return this._getClientMethodSubject(hubName, methodName);
     }
-
     private _raiseStateChanged(change: SignalRStateChange) {
-
         var oldStateName = ConnectionStatePipe.connectionStateToString(change.oldState);
         var newStateName = ConnectionStatePipe.connectionStateToString(change.newState);
         this._raiseLogEvent("[stateChanged]", "oldState:", oldStateName, "newState:", newStateName);
-
         var connectionState = new ConnectionState(this._hubConnection);
         (<Observer<ConnectionState>>this.stateChanged$).next(connectionState);
     }
     private _raiseLogEvent(...args) {
         var message = args.join(" ");
         (<Observer<string>>this.logEvent$).next(message);
+    }
+    private _getClientMethodSubject(hubName: string, methodName: string): Subject<any[]> {
+        var tuple = this._lookupClientMethodSubject(hubName, methodName);
+        if (tuple !== null) return tuple[0];
+        return this._addClientMethodSubject(hubName, methodName);
+    }
+    private _lookupClientMethodSubject(hubName: string, methodName: string): [Subject<any[]>, number] {
+        var result = null;
+        this._clientMethodSubjects.forEach((t, i) => {
+            var [hn, mn, s] = t;
+            if (hn === hubName && mn === methodName) {
+                result = [s, i];
+            }
+        });
+        return result;
+    }
+    private _addClientMethodSubject(hubName: string, methodName: string): Subject<any[]> {
+        var subject = new Subject<any[]>();
+        var hubProxy = this._getHubProxy(hubName);
+        hubProxy.on(methodName, (...msg: any[]) => {
+            subject.next(msg);
+        });
+        this._clientMethodSubjects.push(<ClientMethodTuple>[hubName, methodName, subject]);
+        return subject;
+    }
+    private _removeClientMethodSubject(hubName: string, methodName: string): void {
+        var tuple = this._lookupClientMethodSubject(hubName, methodName);
+        if (tuple === null) return;
+        var [subject, index] = tuple;
+        if (subject.observers.length === 0) {
+            var hubProxy = this._getHubProxy(hubName);
+            // We need to extract the lambda function passed to hubProxy.on()
+            // into a method so that we can pass it to hubProxy.off() too.
+            hubProxy.off(methodName, null);
+            //                       ^^^^
+            this._clientMethodSubjects.splice(index, 1);
+            // Do we need call subject.dispose() too ?
+        }
+    }
+    private _getHubProxy(hubName: string): HubProxy {
+        var hubProxy = this._hubProxyDictionary[hubName];
+        if (!hubProxy) {
+            hubProxy = this._hubConnection.createHubProxy(hubName);
+            this._hubProxyDictionary[hubName] = hubProxy;
+        }
+        return hubProxy;
     }
 }
