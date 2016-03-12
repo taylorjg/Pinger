@@ -1,6 +1,6 @@
 ﻿// ReSharper disable InconsistentNaming
 
-import {Injectable, EventEmitter, Output} from "angular2/core";
+import {Injectable, Output} from "angular2/core";
 import {Observable} from "rxjs/Observable";
 import {Observer} from "rxjs/Observer";
 import {Subject} from "rxjs/Subject";
@@ -9,7 +9,7 @@ import {Subscription} from "rxjs/Subscription";
 import {ConnectionState} from "./connectionState";
 import {ConnectionStatePipe} from "./connectionState.pipe";
 
-type ClientMethodTuple = [string, string, Subject<any[]>];
+type ClientMethodTuple = [string, string, Subject<any[]>, (...args: any[]) => void];
 
 @Injectable()
 export class SignalRService {
@@ -71,16 +71,16 @@ export class SignalRService {
         (<Subject<string>>this.logEvent$).next(message);
     }
     private _getClientMethodSubject(hubName: string, methodName: string): Subject<any[]> {
-        var tuple = this._lookupClientMethodSubject(hubName, methodName);
-        if (tuple !== null) return tuple[0];
+        var index = this._lookupClientMethodSubject(hubName, methodName);
+        if (index >= 0) return this._clientMethodSubjects[index][2];
         return this._addClientMethodSubject(hubName, methodName);
     }
-    private _lookupClientMethodSubject(hubName: string, methodName: string): [Subject<any[]>, number] {
-        var result = null;
+    private _lookupClientMethodSubject(hubName: string, methodName: string): number {
+        var result = -1;
         this._clientMethodSubjects.forEach((t, i) => {
-            var [hn, mn, s] = t;
+            var [hn, mn, _] = t;
             if (hn === hubName && mn === methodName) {
-                result = [s, i];
+                result = i;
             }
         });
         return result;
@@ -88,24 +88,22 @@ export class SignalRService {
     private _addClientMethodSubject(hubName: string, methodName: string): Subject<any[]> {
         var subject = new Subject<any[]>();
         var hubProxy = this._getHubProxy(hubName);
-        hubProxy.on(methodName, (...msg: any[]) => {
+        var callback = (...msg: any[]) => {
             subject.next(msg);
-        });
-        this._clientMethodSubjects.push(<ClientMethodTuple>[hubName, methodName, subject]);
+        };
+        hubProxy.on(methodName, callback);
+        this._clientMethodSubjects.push(<ClientMethodTuple>[hubName, methodName, subject, callback]);
         return subject;
     }
     private _removeClientMethodSubject(hubName: string, methodName: string): void {
-        var tuple = this._lookupClientMethodSubject(hubName, methodName);
-        if (tuple === null) return;
-        var [subject, index] = tuple;
-        if (subject.observers.length === 0) {
+        var index = this._lookupClientMethodSubject(hubName, methodName);
+        if (index < 0) return;
+        var [_, __, s, cb] = this._clientMethodSubjects[index];
+        if (s.observers.length === 0) {
             var hubProxy = this._getHubProxy(hubName);
-            // We need to extract the lambda function passed to hubProxy.on()
-            // into a method so that we can pass it to hubProxy.off() too.
-            hubProxy.off(methodName, null);
-            //                       ^^^^
+            hubProxy.off(methodName, cb);
             this._clientMethodSubjects.splice(index, 1);
-            // Do we need call subject.dispose() too ?
+            // Do we need call s.dispose() too ?
         }
     }
     private _getHubProxy(hubName: string): HubProxy {
