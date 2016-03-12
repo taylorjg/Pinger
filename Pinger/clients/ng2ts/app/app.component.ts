@@ -28,17 +28,22 @@ export class AppComponent implements OnInit, OnDestroy {
     }
     ngOnInit() {
         var ping$ = this._signalRService.registerClientMethodListener("testHub", "ping");
-        this._pingSubscription = ping$.subscribe(this._onPing.bind(this));
+        this._pingSubscription = ping$.subscribe(this._spreadArgs(this._onPing));
         this._logEventSubscription = this._signalRService.logEvent$.subscribe(this._onLogEvent.bind(this));
     }
     ngOnDestroy() {
         this._pingSubscription.unsubscribe();
         this._logEventSubscription.unsubscribe();
     }
-    private _onPing([n]: any[]) {
+    private _onPing(n) {
         this._alertArea.addMessage(`ping ${n}`);
     }
     private _onLogEvent(message: string) {
         this._outputArea.addMessage(message);
+    }
+    private _spreadArgs(f: Function): Function {
+        return (args: any[]) => {
+            f.apply(this, args);
+        };
     }
 }
