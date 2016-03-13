@@ -4,6 +4,10 @@
 * SignalR
 * OWIN self hosting
 * Gulp (including integration with Visual Studio 2015)
+* A client that doesn't use any UI framework/library
+* An Angular 1.x client
+* An Angular 2.x client
+* A React client (not started yet)
 
 ## Screenshot
 
@@ -11,14 +15,9 @@
 
 ## Future Plans
 
-* Add Jasmine unit tests for the existing "no UI framework" client
-* Add a client using AngularJS 1.x
-    * Have a go at using [angular-hint](https://github.com/angular/angular-hint)
-    * Adhere to best practices
-        * [Angular Style Guide](https://github.com/johnpapa/angular-styleguide)
-* Add a client using AngularJS 2 (with code in JavaScript)
-* Add a client using AngularJS 2 (with code in TypeScript)
-* Add a client using React
+* Add unit/e2e tests for the Angular 1.x client
+* Add unit/e2e tests for the Angular 2.x client
+* Add a React client
 
 ## Regarding angular-hint
 
