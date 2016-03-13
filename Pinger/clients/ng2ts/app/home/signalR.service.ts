@@ -78,7 +78,7 @@ export class SignalRService {
     private _lookupClientMethodSubject(hubName: string, methodName: string): number {
         var result = -1;
         this._clientMethodSubjects.forEach((t, i) => {
-            var [hn, mn, _] = t;
+            var [hn, mn] = t;
             if (hn === hubName && mn === methodName) {
                 result = i;
             }
